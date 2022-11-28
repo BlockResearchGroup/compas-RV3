@@ -17,7 +17,6 @@ class DiagramArtist(MeshArtist):
 
     @property
     def diagram(self):
-        """The diagram assigned to the artist."""
         return self.mesh
 
     @diagram.setter
