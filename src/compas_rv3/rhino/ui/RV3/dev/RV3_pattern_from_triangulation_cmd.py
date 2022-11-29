@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
+from compas_ui.ui import UI
 
 from compas.utilities import geometric_key
 from compas_rhino.geometry import RhinoCurve
@@ -12,17 +13,12 @@ from compas_rv3.datastructures import Pattern
 __commandname__ = "RV3_pattern_from_triangulation"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    proxy = get_proxy()
-    if not proxy:
-        return
-
-    cdt = proxy.function("compas_cgal.triangulation.refined_delaunay_mesh")
+    refined_delaunay_mesh = ui.proxy.function("compas_cgal.triangulation.refined_delaunay_mesh")
 
     boundary_guids = compas_rhino.select_curves("Select outer boundary.")
     if not boundary_guids:
@@ -87,7 +83,7 @@ def RunCommand(is_interactive):
                 gkey_constraints[gkey].append(guid)
             polygons.append(points)
 
-    vertices, faces = cdt(
+    vertices, faces = refined_delaunay_mesh(
         boundary,
         curves=polylines,
         holes=polygons,
@@ -98,32 +94,22 @@ def RunCommand(is_interactive):
 
     pattern = Pattern.from_vertices_and_faces(vertices, faces)
 
-    gkey_key = {
-        geometric_key(pattern.vertex_coordinates(key)): key
-        for key in pattern.vertices()
-    }
+    gkey_vertex = {geometric_key(pattern.vertex_coordinates(vertex)): vertex for vertex in pattern.vertices()}
 
     for gkey in gkey_constraints:
         guids = gkey_constraints[gkey]
-        if gkey in gkey_key:
-            key = gkey_key[gkey]
+        if gkey in gkey_vertex:
+            vertex = gkey_vertex[gkey]
             if len(guids) > 1:
-                pattern.vertex_attribute(key, "is_fixed", True)
-            pattern.vertex_attribute(key, "constraints", [str(guid) for guid in guids])
+                pattern.vertex_attribute(vertex, "is_fixed", True)
+            pattern.vertex_attribute(vertex, "constraints", [str(guid) for guid in guids])
 
-    compas_rhino.rs.HideObject(boundary_guids + hole_guids + segments_guids)
+    guids = boundary_guids + hole_guids + segments_guids
+    compas_rhino.rs.HideObject(guids)
 
-    scene.clear()
-    scene.add(pattern, name="Pattern")
-    scene.update()
+    ui.scene.add(pattern, name="Pattern")
+    ui.scene.update()
 
-    print("Pattern object successfully created. Input geometry have been hidden.")
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
 
 if __name__ == "__main__":
-
     RunCommand(True)
