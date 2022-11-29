@@ -4,17 +4,17 @@ from __future__ import division
 
 import compas_rhino
 from compas_rhino.geometry import RhinoMesh
+from compas_ui.ui import UI
 from compas_rv3.datastructures import Pattern
 
 
 __commandname__ = "RV3_pattern_from_mesh"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
     guid = compas_rhino.select_mesh()
     if not guid:
@@ -24,17 +24,10 @@ def RunCommand(is_interactive):
 
     compas_rhino.rs.HideObject(guid)
 
-    scene.clear()
-    scene.add(pattern, name="Pattern")
-    scene.update()
+    ui.scene.add(pattern, name="Pattern")
+    ui.scene.update()
+    ui.record()
 
-    print("Pattern object successfully created. Input mesh has been hidden.")
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
 
 if __name__ == "__main__":
-
     RunCommand(True)
