@@ -2,36 +2,32 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import compas_rhino
+from compas_ui.ui import UI
+
 
 __commandname__ = "RV3_pattern_delete"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
+    ui = UI()
+
+    objects = ui.scene.get("Pattern")
+    if not objects:
+        compas_rhino.display_message("There is no Pattern in the scene.")
         return
+    pattern = objects[0]
 
-    proxy = get_proxy()
-    if not proxy:
-        return
+    vertices = pattern.select_vertices()
+    for vertex in vertices:
+        if pattern.datastructure.has_vertex(vertex):
+            pattern.datastructure.delete_vertex(vertex)
 
-    pattern = scene.get("pattern")[0]
-    if not pattern:
-        print("There is no Pattern in the scene.")
-        return
+    ui.scene.update()
+    ui.record()
 
-    keys = pattern.select_vertices()
-    for key in keys:
-        if pattern.datastructure.has_vertex(key):
-            pattern.datastructure.delete_vertex(key)
-    scene.update()
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
 
 if __name__ == "__main__":
-
     RunCommand(True)
