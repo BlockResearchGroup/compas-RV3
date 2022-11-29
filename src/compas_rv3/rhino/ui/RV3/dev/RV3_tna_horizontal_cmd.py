@@ -5,7 +5,7 @@ from __future__ import division
 import compas_rhino
 from compas.geometry import Translation
 from compas_tna.equilibrium import horizontal_nodal
-from compas_rv2.rhino import HorizontalConduit
+from compas_rv3.rhino import HorizontalConduit
 
 
 __commandname__ = "RV3_tna_horizontal"

@@ -6,7 +6,7 @@ import compas_rhino
 
 from compas.utilities import geometric_key
 from compas_rhino.geometry import RhinoCurve
-from compas_rv2.datastructures import Pattern
+from compas_rv3.datastructures import Pattern
 
 
 __commandname__ = "RV3_pattern_from_triangulation"
@@ -114,7 +114,7 @@ def RunCommand(is_interactive):
     compas_rhino.rs.HideObject(boundary_guids + hole_guids + segments_guids)
 
     scene.clear()
-    scene.add(pattern, name="pattern")
+    scene.add(pattern, name="Pattern")
     scene.update()
 
     print("Pattern object successfully created. Input geometry have been hidden.")

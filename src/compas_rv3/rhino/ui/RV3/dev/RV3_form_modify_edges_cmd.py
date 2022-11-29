@@ -6,7 +6,7 @@ from compas.utilities import flatten
 
 import compas_rhino
 
-# from compas_rv2.rhino import ModifyAttributesForm
+# from compas_rv3.rhino import ModifyAttributesForm
 
 
 __commandname__ = "RV3_form_modify_edges"

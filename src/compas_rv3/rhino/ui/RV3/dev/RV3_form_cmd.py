@@ -7,8 +7,8 @@ from compas.geometry import length_vector
 from compas.geometry import scale_vector
 from compas.geometry import sum_vectors
 
-from compas_rv2.datastructures import ThrustDiagram
-from compas_rv2.datastructures import FormDiagram
+from compas_rv3.datastructures import ThrustDiagram
+from compas_rv3.datastructures import FormDiagram
 
 
 __commandname__ = "RV3_form"

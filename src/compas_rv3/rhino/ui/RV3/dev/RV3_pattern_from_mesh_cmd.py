@@ -4,7 +4,7 @@ from __future__ import division
 
 import compas_rhino
 from compas_rhino.geometry import RhinoMesh
-from compas_rv2.datastructures import Pattern
+from compas_rv3.datastructures import Pattern
 
 
 __commandname__ = "RV3_pattern_from_mesh"
@@ -25,7 +25,7 @@ def RunCommand(is_interactive):
     compas_rhino.rs.HideObject(guid)
 
     scene.clear()
-    scene.add(pattern, name="pattern")
+    scene.add(pattern, name="Pattern")
     scene.update()
 
     print("Pattern object successfully created. Input mesh has been hidden.")

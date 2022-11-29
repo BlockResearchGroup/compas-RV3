@@ -3,17 +3,17 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
-from compas_rv2.datastructures import Pattern
+from compas_ui.ui import UI
+from compas_rv3.datastructures import Pattern
 
 
 __commandname__ = "RV3_pattern_from_lines"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
     guids = compas_rhino.select_lines()
     if not guids:
@@ -22,23 +22,16 @@ def RunCommand(is_interactive):
     lines = compas_rhino.get_line_coordinates(guids)
     pattern = Pattern.from_lines(lines, delete_boundary_face=True)
 
-    if not pattern.face:
-        print("No faces found! Pattern object was not created.")
+    if pattern.number_of_faces() == 0:
+        compas_rhino.display_message("No faces found! Pattern object was not created.")
         return
 
     compas_rhino.rs.HideObjects(guids)
 
-    scene.clear()
-    scene.add(pattern, name="pattern")
-    scene.update()
+    ui.scene.add(pattern, name="Pattern")
+    ui.scene.update()
+    ui.record()
 
-    print("Pattern object successfully created.")
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
 
 if __name__ == "__main__":
-
     RunCommand(True)

@@ -10,10 +10,10 @@ from compas.topology import breadth_first_traverse
 
 from compas.datastructures import mesh_face_adjacency
 
-from compas_rv2.datastructures import SubdMesh
-from compas_rv2.datastructures import Pattern
+from compas_rv3.datastructures import SubdMesh
+from compas_rv3.datastructures import Pattern
 
-from compas_rv2.rhino import SubdConduit
+from compas_rv3.rhino import SubdConduit
 
 
 __commandname__ = "RV3_pattern_from_surfaces"
@@ -224,7 +224,7 @@ def RunCommand(is_interactive):
 
     # 9. update scene
     scene.clear()
-    scene.add(pattern, name="pattern")
+    scene.add(pattern, name="Pattern")
     scene.update()
 
     print(

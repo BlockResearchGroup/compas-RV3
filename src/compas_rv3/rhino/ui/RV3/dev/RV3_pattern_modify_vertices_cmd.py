@@ -5,7 +5,7 @@ from __future__ import division
 import compas_rhino
 from compas.utilities import flatten
 
-# from compas_rv2.rhino import ModifyAttributesForm
+# from compas_rv3.rhino import ModifyAttributesForm
 
 
 __commandname__ = "RV3_pattern_modify_vertices"

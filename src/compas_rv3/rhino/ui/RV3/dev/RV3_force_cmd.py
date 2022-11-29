@@ -4,7 +4,7 @@ from __future__ import division
 
 from compas.geometry import Translation
 
-from compas_rv2.datastructures import ForceDiagram
+from compas_rv3.datastructures import ForceDiagram
 
 
 __commandname__ = "RV3_force"

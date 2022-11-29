@@ -4,7 +4,7 @@ from __future__ import division
 
 import compas_rhino
 
-# from compas_rv2.rhino import ModifyAttributesForm
+# from compas_rv3.rhino import ModifyAttributesForm
 
 
 __commandname__ = "RV3_thrust_modify_faces"
