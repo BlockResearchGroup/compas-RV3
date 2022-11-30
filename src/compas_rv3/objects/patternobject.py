@@ -13,9 +13,6 @@ from compas.colors import Color
 from compas_ui.objects import MeshObject
 
 
-__all__ = ["PatternObject"]
-
-
 class PatternObject(MeshObject):
     """Scene object for patterns in RV2."""
 
@@ -35,3 +32,11 @@ class PatternObject(MeshObject):
             "from_surface.density.V": IntValue(10),
         }
     )
+
+    # @property
+    # def pattern(self):
+    #     return self.item
+
+    # @pattern.setter
+    # def pattern(self, pattern):
+    #     self.item = pattern
