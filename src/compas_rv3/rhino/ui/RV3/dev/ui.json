@@ -1,0 +1,466 @@
+{
+    "icons": {
+        "bitmap": "assets/grid.png",
+        "images": [
+            "0_init",
+            "1_open_file",
+            "2_save_file",
+            "3_settings",
+            "4_settings_objects",
+            "5_settings_solvers",
+            "6_cloud_check",
+            "7_cloud_restart",
+            "8_cloud_shutdown",
+            "9_from_lines",
+            "10_from_mesh",
+            "11_from_surfaces",
+            "12_from_skeleton",
+            "13_from_triangulation",
+            "14_from_features",
+            "15_supports",
+            "16_openings",
+            "17_boundaries",
+            "18_loads",
+            "19_form",
+            "20_force",
+            "21_horizontal",
+            "22_vertical",
+            "23_modify_form_attributes",
+            "24_modify_form_vertices",
+            "25_modify_form_edges",
+            "26_modify_form_move_vertices",
+            "27_modify_force_attributes",
+            "28_modify_force_vertices",
+            "29_modify_force_edges",
+            "30_modify_force_move_vertices",
+            "31_modify_thrust_attributes",
+            "32_modify_thrust_move_supports",
+            "33_show_pipes",
+            "34_color_analysis",
+            "35_modify_pattern",
+            "36_refresh",
+            "37_clear"
+        ]
+    },
+    "commands": [
+        {
+            "name": "RV3_pattern_from_lines",
+            "menu_text": "From Lines",
+            "icon": 9
+        },
+        {
+            "name": "RV3_pattern_from_mesh",
+            "menu_text": "From Mesh",
+            "icon": 10
+        },
+        {
+            "name": "RV3_pattern_from_surfaces",
+            "menu_text": "From Surfaces",
+            "icon": 11
+        },
+        {
+            "name": "RV3_pattern_from_skeleton",
+            "menu_text": "From Skeleton",
+            "icon": 12
+        },
+        {
+            "name": "RV3_pattern_from_triangulation",
+            "menu_text": "From Triangulation",
+            "icon": 13
+        },
+        {
+            "name": "RV3_pattern_from_features",
+            "menu_text": "From Features",
+            "icon": 14
+        },
+        {
+            "name": "RV3_pattern_relax",
+            "menu_text": "Relax"
+        },
+        {
+            "name": "RV3_pattern_smooth",
+            "menu_text": "Smooth"
+        },
+        {
+            "name": "RV3_pattern_subdivide",
+            "menu_text": "Subdivide"
+        },
+        {
+            "name": "RV3_pattern_modify_vertices",
+            "menu_text": "Vertices Attributes"
+        },
+        {
+            "name": "RV3_pattern_modify_edges",
+            "menu_text": "Edges Attributes"
+        },
+        {
+            "name": "RV3_pattern_move_vertices",
+            "menu_text": "Move Vertices"
+        },
+        {
+            "name": "RV3_pattern_delete",
+            "menu_text": "Delete Vertices"
+        },
+        {
+            "name": "RV3_boundary_supports",
+            "menu_text": "Identify Supports",
+            "icon": 15
+        },
+        {
+            "name": "RV3_boundary_boundaries",
+            "menu_text": "Update Boundaries",
+            "icon": 17
+        },
+        {
+            "name": "RV3_form",
+            "menu_text": "Create FormDiagram",
+            "icon": 19,
+            "tooltip": "Create form diagram"
+        },
+        {
+            "name": "RV3_force",
+            "menu_text": "Create ForceDiagram",
+            "icon": 20,
+            "tooltip": "Create force diagram"
+        },
+        {
+            "name": "RV3_tna_horizontal",
+            "menu_text": "Horizontal Equilibrium",
+            "icon": 21,
+            "tooltip": "Horizontal equilibrium"
+        },
+        {
+            "name": "RV3_tna_vertical",
+            "menu_text": "Vertical Equilibrium",
+            "icon": 22,
+            "tooltip": "Vertical equilibrium"
+        },
+        {
+            "name": "RV3_form_attributes",
+            "menu_text": "Diagram Attributes",
+            "icon": 23
+        },
+        {
+            "name": "RV3_form_modify_vertices",
+            "menu_text": "Vertices Attributes",
+            "icon": 24
+        },
+        {
+            "name": "RV3_form_modify_edges",
+            "menu_text": "Edges Attributes",
+            "icon": 25
+        },
+        {
+            "name": "RV3_form_move_vertices",
+            "menu_text": "Move Vertices",
+            "icon": 26
+        },
+        {
+            "name": "RV3_form_relax",
+            "menu_text": "Relax"
+        },
+        {
+            "name": "RV3_force_attributes",
+            "menu_text": "Diagram Attributes",
+            "icon": 27
+        },
+        {
+            "name": "RV3_force_modify_vertices",
+            "menu_text": "Vertices Attributes",
+            "icon": 28
+        },
+        {
+            "name": "RV3_force_modify_edges",
+            "menu_text": "Edges Attributes",
+            "icon": 29
+        },
+        {
+            "name": "RV3_force_move_vertices",
+            "menu_text": "Move Vertices",
+            "icon": 30
+        },
+        {
+            "name": "RV3_thrust_attributes",
+            "menu_text": "Diagram Attributes",
+            "icon": 31
+        },
+        {
+            "name": "RV3_thrust_modify_vertices",
+            "menu_text": "Vertices Attributes",
+            "icon": 24
+        },
+        {
+            "name": "RV3_thrust_move_supports",
+            "menu_text": "Move Supports",
+            "icon": 32
+        },
+        {
+            "name": "RV3_toolbar_settings",
+            "menu_text": "Settings",
+            "icon": 3,
+            "tooltip": "RV3_ settings"
+        },
+        {
+            "name": "RV3_toolbar_pattern",
+            "menu_text": "Create Pattern",
+            "icon": 9,
+            "tooltip": "Create pattern"
+        },
+        {
+            "name": "RV3_toolbar_modify_pattern",
+            "menu_text": "Modify Pattern",
+            "icon": 35,
+            "tooltip": "Modify pattern"
+        },
+        {
+            "name": "RV3_toolbar_boundary",
+            "menu_text": "Boundary Conditions",
+            "icon": 15,
+            "tooltip": "Define boundary conditions"
+        },
+        {
+            "name": "RV3_toolbar_modify_form",
+            "menu_text": "Modify Form Diagram",
+            "icon": 23,
+            "tooltip": "Modify Form Diagram"
+        },
+        {
+            "name": "RV3_toolbar_modify_force",
+            "menu_text": "Modify Force Diagram",
+            "icon": 27,
+            "tooltip": "Modify Force Diagram"
+        },
+        {
+            "name": "RV3_toolbar_modify_thrust",
+            "menu_text": "Modify Thrust Diagram",
+            "icon": 31,
+            "tooltip": "Modify Thrust Diagram"
+        }
+    ],
+    "menus": [
+        {
+            "name": "RhinoVAULT 2",
+            "items": [
+                {
+                    "name": "Create Pattern",
+                    "items": [
+                        {
+                            "command": "RV3_pattern_from_lines"
+                        },
+                        {
+                            "command": "RV3_pattern_from_mesh"
+                        },
+                        {
+                            "command": "RV3_pattern_from_surfaces"
+                        },
+                        {
+                            "command": "RV3_pattern_from_skeleton"
+                        },
+                        {
+                            "command": "RV3_pattern_from_triangulation"
+                        },
+                        {
+                            "command": "RV3_pattern_from_features"
+                        }
+                    ]
+                },
+                {
+                    "name": "Modify Pattern",
+                    "items": [
+                        {
+                            "command": "RV3_pattern_modify_vertices"
+                        },
+                        {
+                            "command": "RV3_pattern_modify_edges"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_pattern_move_vertices"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_pattern_delete"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_pattern_relax"
+                        },
+                        {
+                            "command": "RV3_pattern_smooth"
+                        }
+                    ]
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "name": "Define Boundary Conditions",
+                    "items": [
+                        {
+                            "command": "RV3_boundary_supports"
+                        },
+                        {
+                            "command": "RV3_boundary_boundaries"
+                        }
+                    ]
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "command": "RV3_form"
+                },
+                {
+                    "command": "RV3_force"
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "command": "RV3_tna_horizontal"
+                },
+                {
+                    "command": "RV3_tna_vertical"
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "name": "Modify FormDiagram",
+                    "items": [
+                        {
+                            "command": "RV3_form_attributes"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_form_modify_vertices"
+                        },
+                        {
+                            "command": "RV3_form_modify_edges"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_form_move_vertices"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_form_relax"
+                        }
+                    ]
+                },
+                {
+                    "name": "Modify ForceDiagram",
+                    "items": [
+                        {
+                            "command": "RV3_force_attributes"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_force_modify_vertices"
+                        },
+                        {
+                            "command": "RV3_force_modify_edges"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_force_move_vertices"
+                        }
+                    ]
+                },
+                {
+                    "name": "Modify ThrustDiagram",
+                    "items": [
+                        {
+                            "command": "RV3_thrust_attributes"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_thrust_modify_vertices"
+                        },
+                        {
+                            "type": "separator"
+                        },
+                        {
+                            "command": "RV3_thrust_move_supports"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "toolbars": [
+        {
+            "name": "RV3",
+            "items": [
+                {
+                    "left": "RV3_toolbar_pattern"
+                },
+                {
+                    "left": "RV3_toolbar_modify_pattern"
+                },
+                {
+                    "left": "RV3_toolbar_boundary"
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "left": "RV3_form"
+                },
+                {
+                    "left": "RV3_force"
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "left": "RV3_tna_horizontal"
+                },
+                {
+                    "left": "RV3_tna_vertical"
+                },
+                {
+                    "type": "separator"
+                },
+                {
+                    "left": "RV3_toolbar_modify_form"
+                },
+                {
+                    "left": "RV3_toolbar_modify_force"
+                },
+                {
+                    "left": "RV3_toolbar_modify_thrust"
+                },
+                {
+                    "type": "separator"
+                }
+            ]
+        }
+    ],
+    "toolbargroups": [
+        {
+            "name": "RV3",
+            "toolbars": [
+                "RV3"
+            ]
+        }
+    ]
+}
