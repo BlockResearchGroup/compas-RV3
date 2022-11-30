@@ -4,54 +4,46 @@ from __future__ import division
 
 import compas_rhino
 from compas.utilities import flatten
+from compas_ui.ui import UI
 
 
 __commandname__ = "RV3_pattern_smooth"
 
 
+@UI.error()
 def RunCommand(is_interactive):
-    scene = get_scene()
-    if not scene:
-        return
 
-    proxy = get_proxy()
-    if not proxy:
-        return
+    ui = UI()
 
-    pattern = scene.get("pattern")[0]
-    if not pattern:
-        print("There is no Pattern in the scene.")
+    objects = ui.scene.get("Pattern")
+    if not objects:
+        compas_rhino.display_message("There is no Pattern in the scene.")
         return
+    pattern = objects[0]
 
-    fixed = list(pattern.datastructure.vertices_where({"is_fixed": True}))
+    fixed = list(pattern.datastructure.vertices_where(is_fixed=True))
 
     if not fixed:
-        print("Pattern has no fixed vertices! Smoothing requires fixed vertices.")
+        compas_rhino.display_message("Pattern has no fixed vertices! Smoothing requires fixed vertices.")
         return
 
     options = ["True", "False"]
     option = compas_rhino.rs.GetString(
-        "Press Enter to smooth or ESC to exit. Keep all boundaries fixed?",
-        options[0],
-        options,
+        "Press Enter to smooth or ESC to exit. Keep all boundaries fixed?", default=options[0], strings=options
     )
 
     if option is None:
-        print("Pattern smoothing aborted!")
+        compas_rhino.display_message("Pattern smoothing aborted!")
         return
 
     if option == "True":
-        fixed = fixed + list(flatten(pattern.datastructure.vertices_on_boundaries()))
+        fixed += list(flatten(pattern.datastructure.vertices_on_boundaries()))
 
     pattern.datastructure.smooth_area(fixed=fixed)
 
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
-
-# ==============================================================================
-# Main
-# ==============================================================================
 
 if __name__ == "__main__":
-
     RunCommand(True)

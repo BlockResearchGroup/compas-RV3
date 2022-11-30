@@ -22,7 +22,6 @@ def RunCommand(is_interactive):
     pattern = objects[0]
 
     options = ["AllBoundaryVertices", "Corners", "ByContinuousEdges", "Manual"]
-
     option = compas_rhino.rs.GetString("Selection mode:", strings=options)
 
     if not option:
