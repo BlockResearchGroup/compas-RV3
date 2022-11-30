@@ -62,7 +62,7 @@ class Pattern(Mesh):
                     vkeys.append(key)
         return vkeys
 
-    def vertices_on_edge_loop(self, uv):
+    def edge_loop_vertices(self, uv):
         edges = self.edge_loop(uv)
         if len(edges) == 1:
             return edges[0]
