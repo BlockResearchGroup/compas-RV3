@@ -1,0 +1,7 @@
+* RV3_force_cmd.py: why can the force diagram not be recreated?
+* get_by_name should not trigger an error
+* prints should be display messages or just removed
+* reconnect primal/dual after undo/redo
+* thrust.select_vertices_anchor: rename
+* add select_vertices
+* 
