@@ -6,7 +6,6 @@ import compas_rhino
 from compas_ui.ui import UI
 from compas_rv3.rhino.helpers import get_object_by_name
 
-# import RV3_form_attributes_cmd
 import RV3_form_modify_vertices_cmd
 import RV3_form_modify_edges_cmd
 import RV3_form_move_vertices_cmd
@@ -21,20 +20,11 @@ def RunCommand(is_interactive):
 
     get_object_by_name("FormDiagram")
 
-    options = [
-        # "DiagramAttributes",
-        "VerticesAttributes",
-        "EdgesAttributes",
-        "MoveVertices",
-        "Relax",
-    ]
+    options = ["VerticesAttributes", "EdgesAttributes", "MoveVertices", "Relax"]
     option = compas_rhino.rs.GetString("Modify form diagram:", strings=options)
 
     if not option:
         return
-
-    # if option == "DiagramAttributes":
-    #     RV3_form_attributes_cmd.RunCommand(True)
 
     if option == "VerticesAttributes":
         RV3_form_modify_vertices_cmd.RunCommand(True)
@@ -48,14 +38,6 @@ def RunCommand(is_interactive):
     elif option == "Relax":
         RV3_form_relax_cmd.RunCommand(True)
 
-    # elif option == "Smooth":
-    #     RV3_form_smooth_cmd.RunCommand(True)
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
 
 if __name__ == "__main__":
-
     RunCommand(True)

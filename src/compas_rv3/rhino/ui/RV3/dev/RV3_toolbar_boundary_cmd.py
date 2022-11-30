@@ -32,10 +32,5 @@ def RunCommand(is_interactive):
             RV3_boundary_boundaries_cmd.RunCommand(True)
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
 if __name__ == "__main__":
-
     RunCommand(True)

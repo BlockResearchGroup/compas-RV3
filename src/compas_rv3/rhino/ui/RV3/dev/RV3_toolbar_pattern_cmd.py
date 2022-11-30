@@ -6,12 +6,9 @@ import compas_rhino
 
 import RV3_pattern_from_lines_cmd
 import RV3_pattern_from_mesh_cmd
-import RV3_pattern_from_surfaces_cmd
-
-# import RV3_pattern_from_skeleton_cmd
 import RV3_pattern_from_triangulation_cmd
 
-# import RV3_pattern_from_features_cmd
+# import RV3_pattern_from_surfaces_cmd
 
 
 __commandname__ = "RV3_toolbar_pattern"
@@ -19,14 +16,7 @@ __commandname__ = "RV3_toolbar_pattern"
 
 def RunCommand(is_interactive):
 
-    options = [
-        "FromLines",
-        "FromMesh",
-        "FromSurfaces",
-        # "FromSkeleton",
-        "FromTriangulation",
-        # "FromFeatures",
-    ]
+    options = ["FromLines", "FromMesh", "FromSurfaces", "FromTriangulation"]
     option = compas_rhino.rs.GetString("Create Pattern:", strings=options)
 
     if not option:
@@ -38,23 +28,12 @@ def RunCommand(is_interactive):
     elif option == "FromMesh":
         RV3_pattern_from_mesh_cmd.RunCommand(True)
 
-    elif option == "FromSurfaces":
-        RV3_pattern_from_surfaces_cmd.RunCommand(True)
-
-    # elif option == "FromSkeleton":
-    #     RV3_pattern_from_skeleton_cmd.RunCommand(True)
+    # elif option == "FromSurfaces":
+    #     RV3_pattern_from_surfaces_cmd.RunCommand(True)
 
     elif option == "FromTriangulation":
         RV3_pattern_from_triangulation_cmd.RunCommand(True)
 
-    # elif option == "FromFeatures":
-    #     RV3_pattern_from_features_cmd.RunCommand(True)
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
 
 if __name__ == "__main__":
-
     RunCommand(True)

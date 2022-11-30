@@ -6,6 +6,7 @@ import compas_rhino
 from compas_ui.ui import UI
 from compas_rv3.rhino.helpers import get_object_by_name
 
+
 __commandname__ = "RV3_thrust_move_supports"
 
 
@@ -30,24 +31,19 @@ def RunCommand(is_interactive):
     compas_rhino.rs.Redraw()
 
     # select anchored vertices
-    keys = thrust.select_vertices_anchor()
+    vertices = thrust.select_vertices_anchor()
 
-    if keys:
-        if thrust.move_vertices_vertical(keys):
-            for key in keys:
+    if vertices:
+        if thrust.move_vertices_vertical(vertices):
+            for vertex in vertices:
                 # update the corresponding form diagram vertices
-                z = thrust.diagram.vertex_attribute(key, "z")
-                form.diagram.vertex_attribute(key, "z", z)
+                z = thrust.diagram.vertex_attribute(vertex, "z")
+                form.diagram.vertex_attribute(vertex, "z", z)
             thrust.settings["_is.valid"] = False
 
     ui.scene.update()
     ui.record()
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
 if __name__ == "__main__":
-
     RunCommand(True)

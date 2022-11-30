@@ -38,7 +38,7 @@ def RunCommand(is_interactive):
         option = compas_rhino.rs.GetString("Press Enter to run or ESC to exit.", strings=options)
 
         if option is None:
-            print("Horizontal equilibrium aborted!")
+            compas_rhino.display_message("Horizontal equilibrium aborted!")
             return
 
         if not option:
@@ -51,11 +51,8 @@ def RunCommand(is_interactive):
                 if alpha == i * 10:
                     alpha_default = i
                     break
-            temp = compas_rhino.rs.GetString(
-                "Select parallelisation weight",
-                alpha_options[alpha_default],
-                alpha_options,
-            )
+
+            temp = compas_rhino.rs.GetString("Select parallelisation weight", alpha_options[alpha_default], alpha_options)
             if not temp:
                 alpha = 100
             else:
@@ -83,13 +80,7 @@ def RunCommand(is_interactive):
     if refresh > 0:
         conduit = HorizontalConduit([], refreshrate=refresh)
         with conduit.enabled():
-            horizontal_nodal(
-                form.diagram,
-                force.diagram,
-                kmax=kmax,
-                alpha=alpha,
-                callback=redraw,
-            )
+            horizontal_nodal(form.diagram, force.diagram, kmax=kmax, alpha=alpha, callback=redraw)
     else:
         horizontal_nodal(form.diagram, force.diagram, kmax=kmax, alpha=alpha)
 
@@ -113,21 +104,13 @@ def RunCommand(is_interactive):
     tol = ui.scene.settings["tol.angles"]
 
     if max_angle < tol:
-        print("Horizontal equilibrium found!")
-        print("Maximum angle deviation:", max_angle)
+        compas_rhino.display_message("Horizontal equilibrium found!\nMaximum angle deviation: {}".format(max_angle))
     else:
-        print("Horizontal equilibrium NOT found! Consider running more iterations.")
-        print("Maximum angle deviation:", max_angle)
+        compas_rhino.display_message("Horizontal equilibrium NOT found! Consider running more iterations.\nMaximum angle deviation: {}".format(max_angle))
 
     ui.scene.update()
     ui.record()
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
-
 if __name__ == "__main__":
-
     RunCommand(True)

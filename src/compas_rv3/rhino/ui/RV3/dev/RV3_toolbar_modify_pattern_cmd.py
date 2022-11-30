@@ -22,14 +22,7 @@ def RunCommand(is_interactive):
 
     get_object_by_name("Pattern")
 
-    options = [
-        "VerticesAttributes",
-        "EdgesAttributes",
-        "MoveVertices",
-        "DeleteVertices",
-        "Relax",
-        "Smooth",
-    ]
+    options = ["VerticesAttributes", "EdgesAttributes", "MoveVertices", "DeleteVertices", "Relax", "Smooth"]
     option = compas_rhino.rs.GetString("Modify pattern:", strings=options)
 
     if not option:
@@ -54,10 +47,5 @@ def RunCommand(is_interactive):
         RV3_pattern_smooth_cmd.RunCommand(True)
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
 if __name__ == "__main__":
-
     RunCommand(True)

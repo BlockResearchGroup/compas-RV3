@@ -51,7 +51,7 @@ def RunCommand(is_interactive):
     result = vertical(form.diagram.data, zmax, kmax=kmax)
 
     if not result:
-        print("Vertical equilibrium failed!")
+        compas_rhino.display_message("Vertical equilibrium failed!")
         return
 
     formdata, scale = result
@@ -73,17 +73,11 @@ def RunCommand(is_interactive):
 
     thrust.settings["_is.valid"] = True
 
-    print("Vertical equilibrium found!")
-    print("ThrustDiagram object successfully created with target height of {}.".format(zmax))
+    compas_rhino.display_message("Vertical equilibrium found!\nThrustDiagram object successfully created with target height of {}.".format(zmax))
 
     ui.scene.update()
     ui.record()
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
 if __name__ == "__main__":
-
     RunCommand(True)
