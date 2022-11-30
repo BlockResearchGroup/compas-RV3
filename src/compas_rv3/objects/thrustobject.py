@@ -10,11 +10,10 @@ from compas_ui.values import ColorValue
 from compas_ui.values import FloatValue
 from compas.colors import Color
 
+from .diagramobject import DiagramObject
 
-from compas_ui.objects import MeshObject
 
-
-class ThrustObject(MeshObject):
+class ThrustObject(DiagramObject):
     """Scene object for thrust diagrams in RV2."""
 
     SETTINGS = Settings(

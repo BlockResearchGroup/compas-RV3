@@ -8,14 +8,10 @@ from compas_ui.values import BoolValue
 from compas_ui.values import ColorValue
 from compas.colors import Color
 
-
-from compas_ui.objects import MeshObject
-
-
-__all__ = ["FormObject"]
+from .diagramobject import DiagramObject
 
 
-class FormObject(MeshObject):
+class FormObject(DiagramObject):
     """Scene object for RV2 form diagrams."""
 
     SETTINGS = Settings(
