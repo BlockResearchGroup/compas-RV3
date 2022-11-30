@@ -81,7 +81,7 @@ def compute_sag(pattern, opening):
 def _draw_labels(pattern, openings):
     labels = []
     for i, opening in enumerate(openings):
-        points = pattern.datastructure.vertices_attributes("xyz", keys=opening)
+        points = pattern.mesh.vertices_attributes("xyz", keys=opening)
         centroid = centroid_points(points)
         labels.append({"pos": centroid, "text": str(i)})
     return compas_rhino.draw_labels(labels, layer=pattern.settings["layer"], clear=False, redraw=True)
@@ -105,7 +105,7 @@ def RunCommand(is_interactive):
     pattern = get_object_by_name("Pattern")
 
     # split the exterior boundary
-    openings = split_boundary(pattern.datastructure)
+    openings = split_boundary(pattern.mesh)
 
     # make a label drawing function
     draw_labels = partial(_draw_labels, pattern, openings)
@@ -119,7 +119,7 @@ def RunCommand(is_interactive):
     # compute current opening sags
     targets = []
     for opening in openings:
-        sag = compute_sag(pattern.datastructure, opening)
+        sag = compute_sag(pattern.mesh, opening)
         if sag < 0.05:
             sag = 0.05
         targets.append(sag)
@@ -127,19 +127,19 @@ def RunCommand(is_interactive):
     # compute current opening Qs
     Q = []
     for opening in openings:
-        q = pattern.datastructure.edges_attribute("q", keys=opening)
+        q = pattern.mesh.edges_attribute("q", keys=opening)
         q = sum(q) / len(q)
         Q.append(q)
-        pattern.datastructure.edges_attribute("q", q, keys=opening)
+        pattern.mesh.edges_attribute("q", q, keys=opening)
 
     # relax the pattern
-    relax_pattern(pattern.datastructure, relax)
+    relax_pattern(pattern.mesh, relax)
 
     # update Qs to match target sag
     count = 0
     while True and count < 10:
         count += 1
-        sags = [compute_sag(pattern.datastructure, opening) for opening in openings]
+        sags = [compute_sag(pattern.mesh, opening) for opening in openings]
         if all((sag - target) ** 2 < TOL2 for sag, target in zip(sags, targets)):
             break
         for i in range(len(openings)):
@@ -149,8 +149,8 @@ def RunCommand(is_interactive):
             q = sag / target * q
             Q[i] = q
             opening = openings[i]
-            pattern.datastructure.edges_attribute("q", Q[i], keys=opening)
-        relax_pattern(pattern.datastructure, relax)
+            pattern.mesh.edges_attribute("q", Q[i], keys=opening)
+        relax_pattern(pattern.mesh, relax)
 
     if count == 10:
         print("did not converge after 10 iterations")
@@ -192,7 +192,7 @@ def RunCommand(is_interactive):
 
                 while True and count < 10:
                     count += 1
-                    sags = [compute_sag(pattern.datastructure, opening) for opening in openings]
+                    sags = [compute_sag(pattern.mesh, opening) for opening in openings]
 
                     if all((sag - target) ** 2 < TOL2 for sag, target in zip(sags, targets)):
                         break
@@ -204,8 +204,8 @@ def RunCommand(is_interactive):
                         q = sag / target * q
                         Q[i] = q
                         opening = openings[i]
-                        pattern.datastructure.edges_attribute("q", Q[i], keys=opening)
-                    relax_pattern(pattern.datastructure, relax)
+                        pattern.mesh.edges_attribute("q", Q[i], keys=opening)
+                    relax_pattern(pattern.mesh, relax)
 
                 if count == 10:
                     print("did not converge after 10 iterations")

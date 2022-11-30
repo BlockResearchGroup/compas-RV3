@@ -25,21 +25,21 @@ def RunCommand(is_interactive):
         return
 
     if option == "All":
-        edges = list(pattern.datastructure.edges())
+        edges = list(pattern.mesh.edges())
 
     elif option == "Continuous":
         temp = pattern.select_edges()
-        edges = list(set(flatten([pattern.datastructure.edge_loop(edge) for edge in temp])))
+        edges = list(set(flatten([pattern.mesh.edge_loop(edge) for edge in temp])))
 
     elif option == "Parallel":
         temp = pattern.select_edges()
-        edges = list(set(flatten([pattern.datastructure.edge_strip(edge) for edge in temp])))
+        edges = list(set(flatten([pattern.mesh.edge_strip(edge) for edge in temp])))
 
     elif option == "Manual":
         edges = pattern.select_edges()
 
     if edges:
-        public = [name for name in pattern.datastructure.default_edge_attributes if not name.startswith("_")]
+        public = [name for name in pattern.mesh.default_edge_attributes if not name.startswith("_")]
         if pattern.update_edges_attributes(edges, names=public):
             ui.scene.update()
             ui.record()

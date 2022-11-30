@@ -23,7 +23,7 @@ def RunCommand(is_interactive):
     force = get_object_by_name("ForceDiagram")
     thrust = get_object_by_name("ThrustDiagram")
 
-    bbox = form.datastructure.bounding_box_xy()
+    bbox = form.diagram.bounding_box_xy()
     diagonal = length_vector(subtract_vectors(bbox[2], bbox[0]))
 
     zmax = ui.scene.settings["tna.vertical.zmax"]
@@ -48,7 +48,7 @@ def RunCommand(is_interactive):
 
     ui.scene.settings["tna.vertical.zmax"] = zmax
 
-    result = vertical(form.datastructure.data, zmax, kmax=kmax)
+    result = vertical(form.diagram.data, zmax, kmax=kmax)
 
     if not result:
         print("Vertical equilibrium failed!")
@@ -59,17 +59,17 @@ def RunCommand(is_interactive):
     # store in advance such that it can be reset
     thrust_name = thrust.name
 
-    force.datastructure.attributes["scale"] = scale
-    form.datastructure.data = formdata
-    thrust.datastructure.data = formdata
+    force.diagram.attributes["scale"] = scale
+    form.diagram.data = formdata
+    thrust.diagram.data = formdata
 
     # the name of the thrust diagram is stored in the attribute dict of the mesh
     # therefore the name must be reset explicitly
     thrust.name = thrust_name
 
-    form.datastructure.dual = force.datastructure
-    force.datastructure.primal = form.datastructure
-    thrust.datastructure.dual = force.datastructure
+    form.diagram.dual = force.diagram
+    force.diagram.primal = form.diagram
+    thrust.diagram.dual = force.diagram
 
     thrust.settings["_is.valid"] = True
 

@@ -2,8 +2,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import compas_rhino
-
 from compas.geometry import Translation
 from compas_rv3.datastructures import ForceDiagram
 from compas_ui.ui import UI
@@ -24,10 +22,10 @@ def RunCommand(is_interactive):
     if objects:
         raise RuntimeError("Recreating the force diagram does not work")
 
-    force = ForceDiagram.from_formdiagram(form.datastructure)
+    force = ForceDiagram.from_formdiagram(form.diagram)
     force.default_edge_attributes.update({"lmin": 0.1})
 
-    bbox_form = form.datastructure.bounding_box_xy()
+    bbox_form = form.diagram.bounding_box_xy()
     bbox_force = force.bounding_box_xy()
     xmin_form, xmax_form = bbox_form[0][0], bbox_form[1][0]
     xmin_force, _ = bbox_force[0][0], bbox_force[1][0]
@@ -41,18 +39,11 @@ def RunCommand(is_interactive):
     force.transform(Translation.from_vector([dx, dy, 0]))
     force.update_angle_deviations()
 
-    ui.scene.add(force, name="force")
+    ui.scene.add(force, name="ForceDiagram")
 
     ui.scene.update()
     ui.record()
 
-    print("ForceDiagram object successfully created.")
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
 
 if __name__ == "__main__":
-
     RunCommand(True)

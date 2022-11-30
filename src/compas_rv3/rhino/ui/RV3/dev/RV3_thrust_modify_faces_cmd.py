@@ -18,14 +18,6 @@ def RunCommand(is_interactive):
     form = get_object_by_name("FormDiagram")
     thrust = get_object_by_name("ThrustDiagram")
 
-    if not form:
-        print("There is no FormDiagram in the scene.")
-        return
-
-    if not thrust:
-        print("There is no ThrustDiagram in the scene.")
-        return
-
     # hide the form vertices
     form_vertices = "{}::vertices".format(form.settings["layer"])
     compas_rhino.rs.HideGroup(form_vertices)
@@ -38,14 +30,14 @@ def RunCommand(is_interactive):
         return
 
     if option == "Manual":
-        keys = thrust.select_faces()
+        faces = thrust.select_faces()
 
     thrust_name = thrust.name
 
-    if keys:
-        public = [name for name in form.datastructure.default_face_attributes.keys() if not name.startswith("_")]
-        if form.update_faces_attributes(keys, names=public):
-            thrust.datastructure.data = form.datastructure.data
+    if faces:
+        public = [name for name in form.diagram.default_face_attributes if not name.startswith("_")]
+        if form.update_faces_attributes(faces, names=public):
+            thrust.diagram.data = form.diagram.data
             thrust.name = thrust_name
             thrust.settings["_is.valid"] = False
 
@@ -53,10 +45,5 @@ def RunCommand(is_interactive):
     ui.record()
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
 if __name__ == "__main__":
-
     RunCommand(True)

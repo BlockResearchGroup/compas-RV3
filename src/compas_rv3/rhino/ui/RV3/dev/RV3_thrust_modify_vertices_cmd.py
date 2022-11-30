@@ -38,18 +38,18 @@ def RunCommand(is_interactive):
         return
 
     if option == "Continuous":
-        temp = thrust.select_edges()
-        keys = list(set(flatten([thrust.datastructure.vertices_on_edge_loop(key) for key in temp])))
+        edges = thrust.select_edges()
+        vertices = list(set(flatten([thrust.diagram.edge_loop_vertices(edge) for edge in edges])))
 
     elif option == "Manual":
-        keys = thrust.select_vertices()
+        vertices = thrust.select_vertices()
 
     thrust_name = thrust.name
 
-    if keys:
-        public = [name for name in form.datastructure.default_vertex_attributes.keys() if not name.startswith("_")]
-        if form.update_vertices_attributes(keys, names=public):
-            thrust.datastructure.data = form.datastructure.data
+    if vertices:
+        public = [name for name in form.diagram.default_vertex_attributes if not name.startswith("_")]
+        if form.update_vertices_attributes(vertices, names=public):
+            thrust.diagram.data = form.diagram.data
             thrust.name = thrust_name
             thrust.settings["_is.valid"] = False
 
@@ -57,10 +57,5 @@ def RunCommand(is_interactive):
     ui.record()
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
 if __name__ == "__main__":
-
     RunCommand(True)

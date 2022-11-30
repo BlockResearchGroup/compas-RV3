@@ -7,6 +7,7 @@ from compas.utilities import flatten
 from compas_ui.ui import UI
 from compas_rv3.rhino.helpers import get_object_by_name
 
+
 __commandname__ = "RV3_force_move_vertices"
 
 
@@ -25,15 +26,15 @@ def RunCommand(is_interactive):
 
     if option == "ByContinuousEdges":
         temp = force.select_edges()
-        keys = list(set(flatten([force.datastructure.vertices_on_edge_loop(key) for key in temp])))
+        keys = list(set(flatten([force.diagram.vertices_on_edge_loop(key) for key in temp])))
 
     elif option == "Manual":
         keys = force.select_vertices()
 
     if keys:
         if force.move_vertices(keys):
-            if force.datastructure.primal:
-                force.datastructure.update_angle_deviations()
+            if force.diagram.primal:
+                force.diagram.update_angle_deviations()
             if thrust:
                 thrust.settings["_is.valid"] = False
 
@@ -44,10 +45,5 @@ def RunCommand(is_interactive):
     ui.record()
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
 if __name__ == "__main__":
-
     RunCommand(True)

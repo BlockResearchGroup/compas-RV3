@@ -36,8 +36,8 @@ def RunCommand(is_interactive):
         if thrust.move_vertices_vertical(keys):
             for key in keys:
                 # update the corresponding form diagram vertices
-                z = thrust.datastructure.vertex_attribute(key, "z")
-                form.datastructure.vertex_attribute(key, "z", z)
+                z = thrust.diagram.vertex_attribute(key, "z")
+                form.diagram.vertex_attribute(key, "z", z)
             thrust.settings["_is.valid"] = False
 
     ui.scene.update()

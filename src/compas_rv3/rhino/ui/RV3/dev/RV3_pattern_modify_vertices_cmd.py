@@ -25,21 +25,21 @@ def RunCommand(is_interactive):
         return
 
     if option == "AllBoundaryVertices":
-        vertices = pattern.datastructure.vertices_on_boundary()
+        vertices = pattern.mesh.vertices_on_boundary()
 
     elif option == "Corners":
         angle = compas_rhino.rs.GetInteger("Angle tolerance for non-quad face corners:", 170, 1, 180)
-        vertices = pattern.datastructure.corner_vertices(tol=angle)
+        vertices = pattern.mesh.corner_vertices(tol=angle)
 
     elif option == "ByContinuousEdges":
         edges = pattern.select_edges()
-        vertices = list(set(flatten([pattern.datastructure.vertices_on_edge_loop(edge) for edge in edges])))
+        vertices = list(set(flatten([pattern.mesh.edge_loop_vertices(edge) for edge in edges])))
 
     elif option == "Manual":
         vertices = pattern.select_vertices()
 
     if vertices:
-        public = [name for name in pattern.datastructure.default_vertex_attributes if not name.startswith("_")]
+        public = [name for name in pattern.mesh.default_vertex_attributes if not name.startswith("_")]
         if pattern.update_vertices_attributes(vertices, names=public):
             ui.scene.update()
             ui.record()

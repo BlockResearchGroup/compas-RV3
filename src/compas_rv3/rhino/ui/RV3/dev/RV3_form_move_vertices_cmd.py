@@ -7,6 +7,7 @@ from compas.utilities import flatten
 from compas_ui.ui import UI
 from compas_rv3.rhino.helpers import get_object_by_name
 
+
 __commandname__ = "RV3_form_move_vertices"
 
 
@@ -39,51 +40,16 @@ def RunCommand(is_interactive):
         return
 
     if option == "ByContinuousEdges":
-        temp = form.select_edges()
-        keys = list(set(flatten([form.datastructure.vertices_on_edge_loop(key) for key in temp])))
-
-    # elif option == "ByConstraints":
-    #     guids = form.datastructure.vertices_attribute('constraints')
-    #     guids = list(set(list(flatten(list(filter(None, guids))))))
-
-    #     if not guids:
-    #         print('there are no constraints in this form')
-    #         return
-
-    #     current = form.settings['color.edges']
-    #     form.settings['color.edges'] = [120, 120, 120]
-    #     scene.update()
-
-    #     compas_rhino.rs.ShowObjects(guids)
-
-    #     def custom_filter(rhino_object, geometry, component_index):
-    #         if str(rhino_object.Id) in guids:
-    #             return True
-    #         return False
-
-    #     constraints = compas_rhino.rs.GetObjects('select constraints', custom_filter=custom_filter)
-
-    #     if not constraints:
-    #         return
-
-    #     keys = []
-    #     for guid in constraints:
-    #         for key, attr in form.datastructure.vertices(data=True):
-    #             if attr['constraints']:
-    #                 if str(guid) in attr['constraints']:
-    #                     keys.append(key)
-    #     keys = list(set(keys))
-
-    #     compas_rhino.rs.HideObjects(guids)
-    #     form.settings['color.edges'] = current
+        edges = form.select_edges()
+        vertices = list(set(flatten([form.diagram.vertices_on_edge_loop(edge) for edge in edges])))
 
     elif option == "Manual":
-        keys = form.select_vertices()
+        vertices = form.select_vertices()
 
-    if keys:
-        if form.move_vertices_horizontal(keys):
-            if form.datastructure.dual:
-                form.datastructure.dual.update_angle_deviations()
+    if vertices:
+        if form.move_vertices_horizontal(vertices):
+            if form.diagram.dual:
+                form.diagram.dual.update_angle_deviations()
             if thrust:
                 thrust.settings["_is.valid"] = False
 
@@ -94,10 +60,5 @@ def RunCommand(is_interactive):
     ui.record()
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
 if __name__ == "__main__":
-
     RunCommand(True)

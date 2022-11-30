@@ -83,10 +83,8 @@ def update_nu_nv(mesh):
 
     else:
         while True:
-            nu_or_nv = compas_rhino.rs.GetInteger(
-                "This is a non-quadmesh - Choose an integer that is a power of 2",
-                minimum=2,
-            )
+            nu_or_nv = compas_rhino.rs.GetInteger("This is a non-quadmesh - Choose an integer that is a power of 2", minimum=2)
+
             if (nu_or_nv & (nu_or_nv - 1) == 0) and nu_or_nv != 0:
                 break
             else:

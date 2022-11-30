@@ -22,21 +22,20 @@ def RunCommand(is_interactive):
     # mark all fixed vertices as anchors
     # mark all leaves as anchors
 
-    fixed = list(pattern.datastructure.vertices_where({"is_fixed": True}))
+    fixed = list(pattern.mesh.vertices_where({"is_fixed": True}))
     leaves = []
-    for vertex in pattern.datastructure.vertices():
-        nbrs = pattern.datastructure.vertex_neighbors(vertex)
+    for vertex in pattern.mesh.vertices():
+        nbrs = pattern.mesh.vertex_neighbors(vertex)
         count = 0
         for nbr in nbrs:
-            if pattern.datastructure.edge_attribute((vertex, nbr), "_is_edge"):
+            if pattern.mesh.edge_attribute((vertex, nbr), "_is_edge"):
                 count += 1
         if count == 1:
             leaves.append(vertex)
 
     anchors = list(set(fixed) | set(leaves))
     if anchors:
-        pattern.datastructure.vertices_attribute("is_anchor", True, keys=anchors)
-        print("Fixed vertices of the pattern have automatically been defined as supports.")
+        pattern.mesh.vertices_attribute("is_anchor", True, keys=anchors)
         ui.scene.update()
 
     # manually Select or Unselect
@@ -57,47 +56,28 @@ def RunCommand(is_interactive):
             break
 
         if option2 == "AllBoundaryVertices":
-            keys = list(set(flatten(pattern.datastructure.vertices_on_boundaries())))
+            vertices = list(set(flatten(pattern.mesh.vertices_on_boundaries())))
 
         elif option2 == "Corners":
             angle = compas_rhino.rs.GetInteger("Angle tolerance for non-quad face corners:", 170, 1, 180)
-            keys = pattern.datastructure.corner_vertices(tol=angle)
+            vertices = pattern.mesh.corner_vertices(tol=angle)
 
         elif option2 == "ByContinuousEdges":
             edges = pattern.select_edges()
-            keys = list(set(flatten([pattern.datastructure.vertices_on_edge_loop(edge) for edge in edges])))
-
-        # elif option2 == "ByConstraint":
-
-        #     def predicate(constraints, key, attr):
-        #         if not constraints:
-        #             return False
-        #         if not attr['constraints']:
-        #             return False
-        #         return any(constraint in attr['constraints'] for constraint in constraints)
-
-        #     temp = pattern.select_vertices()
-        #     keys = list(set(flatten(
-        #         [pattern.datastructure.vertices_where_predicate(
-        #             partial(predicate, pattern.datastructure.vertex_attribute(vertex, 'constraints'))) for vertex in temp])))
+            vertices = list(set(flatten([pattern.mesh.vertices_on_edge_loop(edge) for edge in edges])))
 
         elif option2 == "Manual":
-            keys = pattern.select_vertices()
+            vertices = pattern.select_vertices()
 
-        if keys:
+        if vertices:
             if option1 == "Select":
-                pattern.datastructure.vertices_attribute("is_anchor", True, keys=keys)
+                pattern.mesh.vertices_attribute("is_anchor", True, keys=vertices)
             else:
-                pattern.datastructure.vertices_attribute("is_anchor", False, keys=keys)
+                pattern.mesh.vertices_attribute("is_anchor", False, keys=vertices)
 
         ui.scene.update()
     ui.record()
 
 
-# ==============================================================================
-# Main
-# ==============================================================================
-
 if __name__ == "__main__":
-
     RunCommand(True)

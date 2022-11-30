@@ -83,13 +83,7 @@ def RunCommand(is_interactive):
                 gkey_constraints[gkey].append(guid)
             polygons.append(points)
 
-    vertices, faces = refined_delaunay_mesh(
-        boundary,
-        curves=polylines,
-        holes=polygons,
-        maxlength=target_length,
-        is_optimized=True,
-    )
+    vertices, faces = refined_delaunay_mesh(boundary, curves=polylines, holes=polygons, maxlength=target_length, is_optimized=True)
     vertices[:] = [[float(x), float(y), float(z)] for x, y, z in vertices]
 
     pattern = Pattern.from_vertices_and_faces(vertices, faces)

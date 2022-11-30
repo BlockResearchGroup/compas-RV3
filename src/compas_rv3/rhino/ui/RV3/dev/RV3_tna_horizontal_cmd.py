@@ -84,17 +84,17 @@ def RunCommand(is_interactive):
         conduit = HorizontalConduit([], refreshrate=refresh)
         with conduit.enabled():
             horizontal_nodal(
-                form.datastructure,
-                force.datastructure,
+                form.diagram,
+                force.diagram,
                 kmax=kmax,
                 alpha=alpha,
                 callback=redraw,
             )
     else:
-        horizontal_nodal(form.datastructure, force.datastructure, kmax=kmax, alpha=alpha)
+        horizontal_nodal(form.diagram, force.diagram, kmax=kmax, alpha=alpha)
 
-    bbox_form = form.datastructure.bounding_box_xy()
-    bbox_force = force.datastructure.bounding_box_xy()
+    bbox_form = form.diagram.bounding_box_xy()
+    bbox_force = force.diagram.bounding_box_xy()
     xmin_form, xmax_form = bbox_form[0][0], bbox_form[1][0]
     xmin_force, _ = bbox_force[0][0], bbox_force[1][0]
     ymin_form, ymax_form = bbox_form[0][1], bbox_form[3][1]
@@ -104,12 +104,12 @@ def RunCommand(is_interactive):
     dx = 1.3 * (xmax_form - xmin_form) + (xmin_form - xmin_force)
     dy = y_form - y_force
 
-    force.datastructure.transform(Translation.from_vector([dx, dy, 0]))
-    force.datastructure.update_angle_deviations()
+    force.diagram.transform(Translation.from_vector([dx, dy, 0]))
+    force.diagram.update_angle_deviations()
 
     thrust.settings["_is.valid"] = False
 
-    max_angle = max(form.datastructure.edges_attribute("_a"))
+    max_angle = max(form.diagram.edges_attribute("_a"))
     tol = ui.scene.settings["tol.angles"]
 
     if max_angle < tol:
