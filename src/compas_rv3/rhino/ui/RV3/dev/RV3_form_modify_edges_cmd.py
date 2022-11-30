@@ -7,6 +7,7 @@ from compas.utilities import flatten
 import compas_rhino
 from compas_ui.ui import UI
 from compas_rv3.rhino.helpers import get_object_by_name
+
 # from compas_rv3.rhino import ModifyAttributesForm
 
 
@@ -92,11 +93,7 @@ def RunCommand(is_interactive):
         # if thrust:
         #     thrust.settings['_is.valid'] = False
         # scene.update()
-        public = [
-            name
-            for name in form.datastructure.default_edge_attributes.keys()
-            if not name.startswith("_")
-        ]
+        public = [name for name in form.datastructure.default_edge_attributes.keys() if not name.startswith("_")]
         if form.update_edges_attributes(keys, names=public):
             if thrust:
                 thrust.settings["_is.valid"] = False

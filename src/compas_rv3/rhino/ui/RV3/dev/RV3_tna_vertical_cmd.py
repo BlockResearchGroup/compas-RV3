@@ -32,9 +32,7 @@ def RunCommand(is_interactive):
     options = ["TargetHeight"]
 
     while True:
-        option = compas_rhino.rs.GetString(
-            "Press Enter to run or ESC to exit.", strings=options
-        )
+        option = compas_rhino.rs.GetString("Press Enter to run or ESC to exit.", strings=options)
 
         if option is None:
             print("Vetical equilibrium aborted!")
@@ -44,9 +42,7 @@ def RunCommand(is_interactive):
             break
 
         if option == "TargetHeight":
-            new_zmax = compas_rhino.rs.GetReal(
-                "Enter target height of the ThrustDiagram", zmax, 0.0, 1.0 * diagonal
-            )
+            new_zmax = compas_rhino.rs.GetReal("Enter target height of the ThrustDiagram", zmax, 0.0, 1.0 * diagonal)
             if new_zmax or new_zmax is not None:
                 zmax = new_zmax
 
@@ -78,11 +74,7 @@ def RunCommand(is_interactive):
     thrust.settings["_is.valid"] = True
 
     print("Vertical equilibrium found!")
-    print(
-        "ThrustDiagram object successfully created with target height of {}.".format(
-            zmax
-        )
-    )
+    print("ThrustDiagram object successfully created with target height of {}.".format(zmax))
 
     ui.scene.update()
     ui.record()

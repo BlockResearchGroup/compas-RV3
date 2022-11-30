@@ -7,8 +7,10 @@ import compas_rhino
 import RV3_pattern_from_lines_cmd
 import RV3_pattern_from_mesh_cmd
 import RV3_pattern_from_surfaces_cmd
+
 # import RV3_pattern_from_skeleton_cmd
 import RV3_pattern_from_triangulation_cmd
+
 # import RV3_pattern_from_features_cmd
 
 

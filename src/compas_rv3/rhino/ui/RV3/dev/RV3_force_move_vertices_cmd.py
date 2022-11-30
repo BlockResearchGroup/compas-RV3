@@ -25,13 +25,7 @@ def RunCommand(is_interactive):
 
     if option == "ByContinuousEdges":
         temp = force.select_edges()
-        keys = list(
-            set(
-                flatten(
-                    [force.datastructure.vertices_on_edge_loop(key) for key in temp]
-                )
-            )
-        )
+        keys = list(set(flatten([force.datastructure.vertices_on_edge_loop(key) for key in temp])))
 
     elif option == "Manual":
         keys = force.select_vertices()

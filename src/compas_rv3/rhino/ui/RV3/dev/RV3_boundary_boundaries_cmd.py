@@ -84,9 +84,7 @@ def _draw_labels(pattern, openings):
         points = pattern.datastructure.vertices_attributes("xyz", keys=opening)
         centroid = centroid_points(points)
         labels.append({"pos": centroid, "text": str(i)})
-    return compas_rhino.draw_labels(
-        labels, layer=pattern.settings["layer"], clear=False, redraw=True
-    )
+    return compas_rhino.draw_labels(labels, layer=pattern.settings["layer"], clear=False, redraw=True)
 
 
 # ==============================================================================
@@ -181,9 +179,7 @@ def RunCommand(is_interactive):
             N = [int(option1[8:])]
 
         while True:
-            option2 = compas_rhino.rs.GetString(
-                "Select sag/span percentage:", strings=options2
-            )
+            option2 = compas_rhino.rs.GetString("Select sag/span percentage:", strings=options2)
 
             if not option2:
                 break
@@ -196,14 +192,9 @@ def RunCommand(is_interactive):
 
                 while True and count < 10:
                     count += 1
-                    sags = [
-                        compute_sag(pattern.datastructure, opening)
-                        for opening in openings
-                    ]
+                    sags = [compute_sag(pattern.datastructure, opening) for opening in openings]
 
-                    if all(
-                        (sag - target) ** 2 < TOL2 for sag, target in zip(sags, targets)
-                    ):
+                    if all((sag - target) ** 2 < TOL2 for sag, target in zip(sags, targets)):
                         break
 
                     for i in range(len(openings)):

@@ -24,17 +24,13 @@ def RunCommand(is_interactive):
     pattern = get_object_by_name("Pattern")
 
     if not list(pattern.datastructure.vertices_where({"is_anchor": True})):
-        print(
-            "Pattern has no anchor vertices! Please define anchor (support) vertices."
-        )
+        print("Pattern has no anchor vertices! Please define anchor (support) vertices.")
         return
 
     form = FormDiagram.from_pattern(pattern.datastructure)
     form.vertices_attribute("is_fixed", False)
 
-    normals = [
-        form.face_normal(face) for face in form.faces_where({"_is_loaded": True})
-    ]
+    normals = [form.face_normal(face) for face in form.faces_where({"_is_loaded": True})]
     scale = 1 / len(normals)
     normal = scale_vector(sum_vectors(normals), scale)
     if normal[2] < 0:

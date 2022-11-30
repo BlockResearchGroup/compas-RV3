@@ -36,18 +36,14 @@ def RunCommand(is_interactive):
     anchors = list(set(fixed) | set(leaves))
     if anchors:
         pattern.datastructure.vertices_attribute("is_anchor", True, keys=anchors)
-        print(
-            "Fixed vertices of the pattern have automatically been defined as supports."
-        )
+        print("Fixed vertices of the pattern have automatically been defined as supports.")
         ui.scene.update()
 
     # manually Select or Unselect
     # should this not be included in the while loop?
 
     options = ["Select", "Unselect"]
-    option1 = compas_rhino.rs.GetString(
-        "Select or unselect vertices as supports:", strings=options
-    )
+    option1 = compas_rhino.rs.GetString("Select or unselect vertices as supports:", strings=options)
 
     if not option1:
         return
@@ -64,23 +60,12 @@ def RunCommand(is_interactive):
             keys = list(set(flatten(pattern.datastructure.vertices_on_boundaries())))
 
         elif option2 == "Corners":
-            angle = compas_rhino.rs.GetInteger(
-                "Angle tolerance for non-quad face corners:", 170, 1, 180
-            )
+            angle = compas_rhino.rs.GetInteger("Angle tolerance for non-quad face corners:", 170, 1, 180)
             keys = pattern.datastructure.corner_vertices(tol=angle)
 
         elif option2 == "ByContinuousEdges":
             edges = pattern.select_edges()
-            keys = list(
-                set(
-                    flatten(
-                        [
-                            pattern.datastructure.vertices_on_edge_loop(edge)
-                            for edge in edges
-                        ]
-                    )
-                )
-            )
+            keys = list(set(flatten([pattern.datastructure.vertices_on_edge_loop(edge) for edge in edges])))
 
         # elif option2 == "ByConstraint":
 

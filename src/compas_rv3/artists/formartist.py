@@ -18,8 +18,7 @@ class FormArtist(DiagramArtist):
         """
         if not self._vertex_xyz:
             self._vertex_xyz = {
-                vertex: self.diagram.vertex_attributes(vertex, "xy") + [0.0]
-                for vertex in self.diagram.vertices()
+                vertex: self.diagram.vertex_attributes(vertex, "xy") + [0.0] for vertex in self.diagram.vertices()
             }
         return self._vertex_xyz
 

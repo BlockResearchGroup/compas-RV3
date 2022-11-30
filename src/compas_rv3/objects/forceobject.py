@@ -16,15 +16,16 @@ __all__ = ["ForceObject"]
 
 
 class ForceObject(MeshObject):
-    """Scene object for RV2 force diagrams.
-    """
+    """Scene object for RV2 force diagrams."""
 
-    SETTINGS = Settings({
-        'layer': StrValue("RV2::ForceDiagram"),
-        'show.vertices': BoolValue(True),
-        'show.edges': BoolValue(True),
-        'color.vertices': ColorValue(Color.cyan()),
-        'color.vertices:is_fixed': ColorValue(Color.cyan()),
-        'color.edges': ColorValue(Color.blue()),
-        'color.tension': ColorValue(Color.red())
-    })
+    SETTINGS = Settings(
+        {
+            "layer": StrValue("RV2::ForceDiagram"),
+            "show.vertices": BoolValue(True),
+            "show.edges": BoolValue(True),
+            "color.vertices": ColorValue(Color.cyan()),
+            "color.vertices:is_fixed": ColorValue(Color.cyan()),
+            "color.edges": ColorValue(Color.blue()),
+            "color.tension": ColorValue(Color.red()),
+        }
+    )

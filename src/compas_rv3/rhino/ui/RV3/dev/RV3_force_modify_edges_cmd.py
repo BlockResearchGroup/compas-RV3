@@ -32,9 +32,7 @@ def RunCommand(is_interactive):
 
     elif option == "Continuous":
         edges = force.select_edges()
-        keys = list(
-            set(flatten([force.datastructure.edge_loop(edge) for edge in edges]))
-        )
+        keys = list(set(flatten([force.datastructure.edge_loop(edge) for edge in edges])))
 
     elif option == "Parallel":
         temp = force.select_edges()
@@ -102,11 +100,7 @@ def RunCommand(is_interactive):
         # if thrust:
         #     thrust.settings['_is.valid'] = False
         # scene.update()
-        public = [
-            name
-            for name in force.datastructure.default_edge_attributes.keys()
-            if not name.startswith("_")
-        ]
+        public = [name for name in force.datastructure.default_edge_attributes.keys() if not name.startswith("_")]
         if force.update_edges_attributes(keys, names=public):
             if thrust:
                 thrust.settings["_is.valid"] = False

@@ -40,11 +40,7 @@ def RunCommand(is_interactive):
 
     if option == "ByContinuousEdges":
         temp = form.select_edges()
-        keys = list(
-            set(
-                flatten([form.datastructure.vertices_on_edge_loop(key) for key in temp])
-            )
-        )
+        keys = list(set(flatten([form.datastructure.vertices_on_edge_loop(key) for key in temp])))
 
     # elif option == "ByConstraints":
     #     guids = form.datastructure.vertices_attribute('constraints')

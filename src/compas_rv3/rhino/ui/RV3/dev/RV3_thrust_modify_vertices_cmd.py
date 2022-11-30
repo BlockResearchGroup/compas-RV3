@@ -39,13 +39,7 @@ def RunCommand(is_interactive):
 
     if option == "Continuous":
         temp = thrust.select_edges()
-        keys = list(
-            set(
-                flatten(
-                    [thrust.datastructure.vertices_on_edge_loop(key) for key in temp]
-                )
-            )
-        )
+        keys = list(set(flatten([thrust.datastructure.vertices_on_edge_loop(key) for key in temp])))
 
     elif option == "Manual":
         keys = thrust.select_vertices()
@@ -53,11 +47,7 @@ def RunCommand(is_interactive):
     thrust_name = thrust.name
 
     if keys:
-        public = [
-            name
-            for name in form.datastructure.default_vertex_attributes.keys()
-            if not name.startswith("_")
-        ]
+        public = [name for name in form.datastructure.default_vertex_attributes.keys() if not name.startswith("_")]
         if form.update_vertices_attributes(keys, names=public):
             thrust.datastructure.data = form.datastructure.data
             thrust.name = thrust_name

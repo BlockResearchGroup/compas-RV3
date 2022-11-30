@@ -24,13 +24,7 @@ def RunCommand(is_interactive):
 
     if option == "ByContinuousEdges":
         temp = pattern.select_edges()
-        keys = list(
-            set(
-                flatten(
-                    [pattern.datastructure.vertices_on_edge_loop(key) for key in temp]
-                )
-            )
-        )
+        keys = list(set(flatten([pattern.datastructure.vertices_on_edge_loop(key) for key in temp])))
 
     # elif option == "ByConstraints":
     #     guids = pattern.datastructure.vertices_attribute('constraints')

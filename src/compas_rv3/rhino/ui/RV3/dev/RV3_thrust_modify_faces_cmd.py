@@ -43,11 +43,7 @@ def RunCommand(is_interactive):
     thrust_name = thrust.name
 
     if keys:
-        public = [
-            name
-            for name in form.datastructure.default_face_attributes.keys()
-            if not name.startswith("_")
-        ]
+        public = [name for name in form.datastructure.default_face_attributes.keys() if not name.startswith("_")]
         if form.update_faces_attributes(keys, names=public):
             thrust.datastructure.data = form.datastructure.data
             thrust.name = thrust_name

@@ -31,9 +31,7 @@ def divide_edge_strip_faces(mesh, edge):
             is_strip_quad = False
 
     if is_strip_quad:
-        nu_or_nv = compas_rhino.rs.GetInteger(
-            "This is a quadmesh strip - Choose any integer", minimum=2
-        )
+        nu_or_nv = compas_rhino.rs.GetInteger("This is a quadmesh strip - Choose any integer", minimum=2)
 
     else:
         while True:
@@ -77,9 +75,7 @@ def update_nu_nv(mesh):
             quad_mesh = False
 
     if quad_mesh:
-        nu = compas_rhino.rs.GetInteger(
-            "This is a quadmesh - Choose any integer", minimum=2
-        )
+        nu = compas_rhino.rs.GetInteger("This is a quadmesh - Choose any integer", minimum=2)
 
         for face in mesh.faces():
             mesh.face_attribute(face, "nu", nu)
@@ -154,9 +150,7 @@ def RunCommand(is_interactive):
         return
 
     # 1. select rhino surface or polysurfaces
-    guid = compas_rhino.select_surface(
-        message="Select one surface or joined, non-trimmed surfaces"
-    )
+    guid = compas_rhino.select_surface(message="Select one surface or joined, non-trimmed surfaces")
     compas_rhino.rs.HideObjects(guid)
 
     # 2. make subdmesh and add it to the scene
@@ -227,9 +221,7 @@ def RunCommand(is_interactive):
     scene.add(pattern, name="Pattern")
     scene.update()
 
-    print(
-        "Pattern object successfully created. Input surface or polysurface has been hidden."
-    )
+    print("Pattern object successfully created. Input surface or polysurface has been hidden.")
 
 
 # ==============================================================================

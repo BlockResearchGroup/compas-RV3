@@ -21,9 +21,7 @@ def RunCommand(is_interactive):
     options = ["IdentifySupports", "UpdateBoundaries"]
 
     while True:
-        option = compas_rhino.rs.GetString(
-            "Define boundary conditions:", strings=options
-        )
+        option = compas_rhino.rs.GetString("Define boundary conditions:", strings=options)
         if not option:
             return
 

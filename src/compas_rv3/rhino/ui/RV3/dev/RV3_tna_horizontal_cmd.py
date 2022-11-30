@@ -21,9 +21,7 @@ def RunCommand(is_interactive):
         if k % conduit.refreshrate:
             return
         print(k)
-        conduit.lines = [
-            [[xy[i][1], -xy[i][0]], [xy[j][1], -xy[j][0]]] for i, j in edges
-        ]
+        conduit.lines = [[[xy[i][1], -xy[i][0]], [xy[j][1], -xy[j][0]]] for i, j in edges]
         conduit.redraw()
 
     form = get_object_by_name("FormDiagram")
@@ -37,9 +35,7 @@ def RunCommand(is_interactive):
     options = ["Alpha", "Iterations", "RefreshRate"]
 
     while True:
-        option = compas_rhino.rs.GetString(
-            "Press Enter to run or ESC to exit.", strings=options
-        )
+        option = compas_rhino.rs.GetString("Press Enter to run or ESC to exit.", strings=options)
 
         if option is None:
             print("Horizontal equilibrium aborted!")
@@ -66,16 +62,12 @@ def RunCommand(is_interactive):
                 alpha = int(temp[4:])
 
         elif option == "Iterations":
-            new_kmax = compas_rhino.rs.GetInteger(
-                "Enter number of iterations", kmax, 1, 10000
-            )
+            new_kmax = compas_rhino.rs.GetInteger("Enter number of iterations", kmax, 1, 10000)
             if new_kmax or new_kmax is not None:
                 kmax = new_kmax
 
         elif option == "RefreshRate":
-            new_refresh = compas_rhino.rs.GetInteger(
-                "Refresh rate for dynamic visualisation", refresh, 0, 1000
-            )
+            new_refresh = compas_rhino.rs.GetInteger("Refresh rate for dynamic visualisation", refresh, 0, 1000)
             if new_refresh or new_refresh is not None:
                 refresh = new_refresh
 
@@ -99,9 +91,7 @@ def RunCommand(is_interactive):
                 callback=redraw,
             )
     else:
-        horizontal_nodal(
-            form.datastructure, force.datastructure, kmax=kmax, alpha=alpha
-        )
+        horizontal_nodal(form.datastructure, force.datastructure, kmax=kmax, alpha=alpha)
 
     bbox_form = form.datastructure.bounding_box_xy()
     bbox_force = force.datastructure.bounding_box_xy()
@@ -131,6 +121,7 @@ def RunCommand(is_interactive):
 
     ui.scene.update()
     ui.record()
+
 
 # ==============================================================================
 # Main
