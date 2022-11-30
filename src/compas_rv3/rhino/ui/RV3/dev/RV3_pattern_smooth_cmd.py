@@ -5,7 +5,7 @@ from __future__ import division
 import compas_rhino
 from compas.utilities import flatten
 from compas_ui.ui import UI
-
+from compas_rv3.rhino.helpers import get_object_by_name
 
 __commandname__ = "RV3_pattern_smooth"
 
@@ -15,9 +15,10 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    objects = ui.scene.get("Pattern")
-    if not objects:
-        compas_rhino.display_message("There is no Pattern in the scene.")
+    pattern = get_object_by_name("Pattern")
+
+    if not pattern:
+        print("There is no FormDiagram in the scene.")
         return
     pattern = objects[0]
 

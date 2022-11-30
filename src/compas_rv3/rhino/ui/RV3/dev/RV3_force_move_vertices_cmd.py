@@ -4,23 +4,19 @@ from __future__ import division
 
 import compas_rhino
 from compas.utilities import flatten
-
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 __commandname__ = "RV3_force_move_vertices"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    force = scene.get("force")[0]
-    if not force:
-        print("There is no ForceDiagram in the scene.")
-        return
-
-    thrust = scene.get("thrust")[0]
+    force = get_object_by_name("ForceDiagram")
+    thrust = get_object_by_name("ThrustDiagram")
 
     options = ["ByContinuousEdges", "Manual"]
     option = compas_rhino.rs.GetString("Selection Type.", strings=options)
@@ -29,13 +25,7 @@ def RunCommand(is_interactive):
 
     if option == "ByContinuousEdges":
         temp = force.select_edges()
-        keys = list(
-            set(
-                flatten(
-                    [force.datastructure.vertices_on_edge_loop(key) for key in temp]
-                )
-            )
-        )
+        keys = list(set(flatten([force.datastructure.vertices_on_edge_loop(key) for key in temp])))
 
     elif option == "Manual":
         keys = force.select_vertices()
@@ -50,7 +40,8 @@ def RunCommand(is_interactive):
     # the scene needs to be updated
     # even if the vertices where not modified
     # to reset group visibility to the configuration of settings
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

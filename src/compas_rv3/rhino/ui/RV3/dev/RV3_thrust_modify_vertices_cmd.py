@@ -5,26 +5,19 @@ from __future__ import division
 from compas.utilities import flatten
 
 import compas_rhino
-
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 __commandname__ = "RV3_thrust_modify_vertices"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    form = scene.get("form")[0]
-    if not form:
-        print("There is no FormDiagram in the scene.")
-        return
-
-    thrust = scene.get("thrust")[0]
-    if not thrust:
-        print("There is no ThrustDiagram in the scene.")
-        return
+    form = get_object_by_name("FormDiagram")
+    thrust = get_object_by_name("ThrustDiagram")
 
     # hide the form vertices
     form_vertices = "{}::vertices".format(form.settings["layer"])
@@ -41,18 +34,12 @@ def RunCommand(is_interactive):
     options = ["Continuous", "Manual"]
     option = compas_rhino.rs.GetString("Selection Type.", strings=options)
     if not option:
-        scene.update()
+        ui.scene.update()
         return
 
     if option == "Continuous":
         temp = thrust.select_edges()
-        keys = list(
-            set(
-                flatten(
-                    [thrust.datastructure.vertices_on_edge_loop(key) for key in temp]
-                )
-            )
-        )
+        keys = list(set(flatten([thrust.datastructure.vertices_on_edge_loop(key) for key in temp])))
 
     elif option == "Manual":
         keys = thrust.select_vertices()
@@ -60,17 +47,14 @@ def RunCommand(is_interactive):
     thrust_name = thrust.name
 
     if keys:
-        public = [
-            name
-            for name in form.datastructure.default_vertex_attributes.keys()
-            if not name.startswith("_")
-        ]
+        public = [name for name in form.datastructure.default_vertex_attributes.keys() if not name.startswith("_")]
         if form.update_vertices_attributes(keys, names=public):
             thrust.datastructure.data = form.datastructure.data
             thrust.name = thrust_name
             thrust.settings["_is.valid"] = False
 
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

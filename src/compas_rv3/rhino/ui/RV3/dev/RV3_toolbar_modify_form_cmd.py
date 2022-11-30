@@ -3,30 +3,26 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
-import RV2form_attributes_cmd
-import RV2form_modify_vertices_cmd
-import RV2form_modify_edges_cmd
-import RV2form_move_vertices_cmd
-import RV2form_relax_cmd
+# import RV3_form_attributes_cmd
+import RV3_form_modify_vertices_cmd
+import RV3_form_modify_edges_cmd
+import RV3_form_move_vertices_cmd
+import RV3_form_relax_cmd
 
 
 __commandname__ = "RV3_toolbar_modify_form"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
-
-    pattern = scene.get("form")[0]
-    if not pattern:
-        print("There is no FormDiagram in the scene.")
-        return
+    get_object_by_name("FormDiagram")
 
     options = [
-        "DiagramAttributes",
+        # "DiagramAttributes",
         "VerticesAttributes",
         "EdgesAttributes",
         "MoveVertices",
@@ -37,23 +33,23 @@ def RunCommand(is_interactive):
     if not option:
         return
 
-    if option == "DiagramAttributes":
-        RV2form_attributes_cmd.RunCommand(True)
+    # if option == "DiagramAttributes":
+    #     RV3_form_attributes_cmd.RunCommand(True)
 
-    elif option == "VerticesAttributes":
-        RV2form_modify_vertices_cmd.RunCommand(True)
+    if option == "VerticesAttributes":
+        RV3_form_modify_vertices_cmd.RunCommand(True)
 
     elif option == "EdgesAttributes":
-        RV2form_modify_edges_cmd.RunCommand(True)
+        RV3_form_modify_edges_cmd.RunCommand(True)
 
     elif option == "MoveVertices":
-        RV2form_move_vertices_cmd.RunCommand(True)
+        RV3_form_move_vertices_cmd.RunCommand(True)
 
     elif option == "Relax":
-        RV2form_relax_cmd.RunCommand(True)
+        RV3_form_relax_cmd.RunCommand(True)
 
     # elif option == "Smooth":
-    #     RV2form_smooth_cmd.RunCommand(True)
+    #     RV3_form_smooth_cmd.RunCommand(True)
 
 
 # ==============================================================================

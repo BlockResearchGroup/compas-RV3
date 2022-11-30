@@ -3,28 +3,19 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
-
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 __commandname__ = "RV3_thrust_move_supports"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    # both form and thrust need to be available
-
-    form = scene.get("form")[0]
-    if not form:
-        print("There is no FormDiagram in the scene.")
-        return
-
-    thrust = scene.get("thrust")[0]
-    if not thrust:
-        print("There is no ThrustDiagram in the scene.")
-        return
+    form = get_object_by_name("FormDiagram")
+    thrust = get_object_by_name("ThrustDiagram")
 
     # hide the form vertices
     form_vertices = "{}::vertices".format(form.settings["layer"])
@@ -49,7 +40,8 @@ def RunCommand(is_interactive):
                 form.datastructure.vertex_attribute(key, "z", z)
             thrust.settings["_is.valid"] = False
 
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

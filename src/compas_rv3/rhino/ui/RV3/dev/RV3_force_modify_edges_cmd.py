@@ -5,6 +5,8 @@ from __future__ import division
 from compas.utilities import flatten
 
 import compas_rhino
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 # from compas_rv3.rhino import ModifyAttributesForm
 
@@ -12,18 +14,13 @@ import compas_rhino
 __commandname__ = "RV3_force_modify_edges"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    force = scene.get("force")[0]
-    if not force:
-        print("There is no ForceDiagram in the scene.")
-        return
-
-    thrust = scene.get("thrust")[0]
+    force = get_object_by_name("ForceDiagram")
+    thrust = get_object_by_name("ThrustDiagram")
 
     options = ["All", "Continuous", "Parallel", "Manual"]
     option = compas_rhino.rs.GetString("Selection Type.", strings=options)
@@ -35,9 +32,7 @@ def RunCommand(is_interactive):
 
     elif option == "Continuous":
         edges = force.select_edges()
-        keys = list(
-            set(flatten([force.datastructure.edge_loop(edge) for edge in edges]))
-        )
+        keys = list(set(flatten([force.datastructure.edge_loop(edge) for edge in edges])))
 
     elif option == "Parallel":
         temp = force.select_edges()
@@ -105,16 +100,13 @@ def RunCommand(is_interactive):
         # if thrust:
         #     thrust.settings['_is.valid'] = False
         # scene.update()
-        public = [
-            name
-            for name in force.datastructure.default_edge_attributes.keys()
-            if not name.startswith("_")
-        ]
+        public = [name for name in force.datastructure.default_edge_attributes.keys() if not name.startswith("_")]
         if force.update_edges_attributes(keys, names=public):
             if thrust:
                 thrust.settings["_is.valid"] = False
 
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

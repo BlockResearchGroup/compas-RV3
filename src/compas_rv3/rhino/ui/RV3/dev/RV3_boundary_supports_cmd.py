@@ -5,21 +5,19 @@ from __future__ import division
 from compas.utilities import flatten
 
 import compas_rhino
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_boundary_supports"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    pattern = scene.get("pattern")[0]
-    if not pattern:
-        print("There is no Pattern in the scene.")
-        return
+    pattern = get_object_by_name("Pattern")
 
     # mark all fixed vertices as anchors
     # mark all leaves as anchors
@@ -38,18 +36,14 @@ def RunCommand(is_interactive):
     anchors = list(set(fixed) | set(leaves))
     if anchors:
         pattern.datastructure.vertices_attribute("is_anchor", True, keys=anchors)
-        print(
-            "Fixed vertices of the pattern have automatically been defined as supports."
-        )
-        scene.update()
+        print("Fixed vertices of the pattern have automatically been defined as supports.")
+        ui.scene.update()
 
     # manually Select or Unselect
     # should this not be included in the while loop?
 
     options = ["Select", "Unselect"]
-    option1 = compas_rhino.rs.GetString(
-        "Select or unselect vertices as supports:", strings=options
-    )
+    option1 = compas_rhino.rs.GetString("Select or unselect vertices as supports:", strings=options)
 
     if not option1:
         return
@@ -60,29 +54,18 @@ def RunCommand(is_interactive):
         option2 = compas_rhino.rs.GetString("Selection mode:", strings=options)
 
         if not option2:
-            return
+            break
 
         if option2 == "AllBoundaryVertices":
             keys = list(set(flatten(pattern.datastructure.vertices_on_boundaries())))
 
         elif option2 == "Corners":
-            angle = compas_rhino.rs.GetInteger(
-                "Angle tolerance for non-quad face corners:", 170, 1, 180
-            )
+            angle = compas_rhino.rs.GetInteger("Angle tolerance for non-quad face corners:", 170, 1, 180)
             keys = pattern.datastructure.corner_vertices(tol=angle)
 
         elif option2 == "ByContinuousEdges":
             edges = pattern.select_edges()
-            keys = list(
-                set(
-                    flatten(
-                        [
-                            pattern.datastructure.vertices_on_edge_loop(edge)
-                            for edge in edges
-                        ]
-                    )
-                )
-            )
+            keys = list(set(flatten([pattern.datastructure.vertices_on_edge_loop(edge) for edge in edges])))
 
         # elif option2 == "ByConstraint":
 
@@ -107,7 +90,8 @@ def RunCommand(is_interactive):
             else:
                 pattern.datastructure.vertices_attribute("is_anchor", False, keys=keys)
 
-        scene.update()
+        ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

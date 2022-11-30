@@ -10,34 +10,27 @@ from compas.geometry import sum_vectors
 from compas_rv3.datastructures import ThrustDiagram
 from compas_rv3.datastructures import FormDiagram
 
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 __commandname__ = "RV3_form"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    pattern = scene.get("pattern")[0]
-
-    if not pattern:
-        print("There is no Pattern in the scene.")
-        return
+    pattern = get_object_by_name("Pattern")
 
     if not list(pattern.datastructure.vertices_where({"is_anchor": True})):
-        print(
-            "Pattern has no anchor vertices! Please define anchor (support) vertices."
-        )
+        print("Pattern has no anchor vertices! Please define anchor (support) vertices.")
         return
 
     form = FormDiagram.from_pattern(pattern.datastructure)
     form.vertices_attribute("is_fixed", False)
 
-    normals = [
-        form.face_normal(face) for face in form.faces_where({"_is_loaded": True})
-    ]
+    normals = [form.face_normal(face) for face in form.faces_where({"_is_loaded": True})]
     scale = 1 / len(normals)
     normal = scale_vector(sum_vectors(normals), scale)
     if normal[2] < 0:
@@ -55,11 +48,12 @@ def RunCommand(is_interactive):
     diagonal = length_vector(subtract_vectors(bbox_form[2], bbox_form[0]))
     zmax = 0.25 * diagonal
 
-    scene.settings["Solvers"]["tna.vertical.zmax"] = round(zmax, 1)
-    scene.clear()
-    scene.add(form, name="form")
-    scene.add(thrust, name="thrust")
-    scene.update()
+    ui.scene.settings["tna.vertical.zmax"] = round(zmax, 1)
+    ui.scene.clear()
+    ui.scene.add(form, name="FormDiagram")
+    ui.scene.add(thrust, name="ThrustDiagram")
+    ui.scene.update()
+    ui.record()
 
     print("FormDiagram object successfully created.")
 

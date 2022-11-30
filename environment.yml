@@ -1,0 +1,14 @@
+name: csd1
+channels:
+    - conda-forge
+
+dependencies:
+   - python=3.9
+   - pip
+   - python-planarity
+   - compas>=1.17.3
+   - pip:
+     - compas_cloud
+     - compas_ui
+     - compas_tna
+     - compas_rv2

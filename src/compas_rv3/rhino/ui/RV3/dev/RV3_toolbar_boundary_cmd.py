@@ -3,39 +3,33 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
-import RV2boundary_supports_cmd
-import RV2boundary_boundaries_cmd
+import RV3_boundary_supports_cmd
+import RV3_boundary_boundaries_cmd
 
 
 __commandname__ = "RV3_toolbar_boundary"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
-
-    pattern = scene.get("pattern")[0]
-    if not pattern:
-        print("There is no Pattern in the scene.")
-        return
+    get_object_by_name("Pattern")
 
     options = ["IdentifySupports", "UpdateBoundaries"]
 
     while True:
-        option = compas_rhino.rs.GetString(
-            "Define boundary conditions:", strings=options
-        )
+        option = compas_rhino.rs.GetString("Define boundary conditions:", strings=options)
         if not option:
             return
 
         if option == "IdentifySupports":
-            RV2boundary_supports_cmd.RunCommand(True)
+            RV3_boundary_supports_cmd.RunCommand(True)
 
         elif option == "UpdateBoundaries":
-            RV2boundary_boundaries_cmd.RunCommand(True)
+            RV3_boundary_boundaries_cmd.RunCommand(True)
 
 
 # ==============================================================================

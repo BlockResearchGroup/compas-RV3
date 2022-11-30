@@ -3,29 +3,25 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
-import RV2thrust_attributes_cmd
-import RV2thrust_modify_vertices_cmd
-import RV2thrust_move_supports_cmd
-import RV2thrust_modify_faces_cmd
+# import RV3_thrust_attributes_cmd
+import RV3_thrust_modify_vertices_cmd
+import RV3_thrust_move_supports_cmd
+import RV3_thrust_modify_faces_cmd
 
 
 __commandname__ = "RV3_toolbar_modify_thrust"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
-
-    pattern = scene.get("thrust")[0]
-    if not pattern:
-        print("There is no ThrustDiagram in the scene.")
-        return
+    get_object_by_name("ThrustDiagram")
 
     options = [
-        "DiagramAttributes",
+        # "DiagramAttributes",
         "VerticesAttributes",
         "FacesAttributes",
         "MoveSupports",
@@ -35,17 +31,17 @@ def RunCommand(is_interactive):
     if not option:
         return
 
-    if option == "DiagramAttributes":
-        RV2thrust_attributes_cmd.RunCommand(True)
+    # if option == "DiagramAttributes":
+    #     RV3_thrust_attributes_cmd.RunCommand(True)
 
-    elif option == "VerticesAttributes":
-        RV2thrust_modify_vertices_cmd.RunCommand(True)
+    if option == "VerticesAttributes":
+        RV3_thrust_modify_vertices_cmd.RunCommand(True)
 
     elif option == "FacesAttributes":
-        RV2thrust_modify_faces_cmd.RunCommand(True)
+        RV3_thrust_modify_faces_cmd.RunCommand(True)
 
     elif option == "MoveSupports":
-        RV2thrust_move_supports_cmd.RunCommand(True)
+        RV3_thrust_move_supports_cmd.RunCommand(True)
 
 
 # ==============================================================================

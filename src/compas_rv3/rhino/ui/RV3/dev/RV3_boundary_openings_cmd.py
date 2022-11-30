@@ -8,14 +8,14 @@ __commandname__ = "RV3_boundary_openings"
 
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    # scene = get_scene()
+    # if not scene:
+    #     return
 
-    pattern = scene.get("pattern")[0]
-    if not pattern:
-        print("There is no Pattern in the scene.")
-        return
+    # pattern = scene.get("pattern")[0]
+    # if not pattern:
+    #     print("There is no Pattern in the scene.")
+    #     return
 
     # select vertices and faces
     # delete selected vertices and faces

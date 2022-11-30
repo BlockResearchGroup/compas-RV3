@@ -3,54 +3,51 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
-import RV2force_attributes_cmd
-import RV2force_modify_vertices_cmd
-import RV2force_modify_edges_cmd
-import RV2force_move_vertices_cmd
-import RV2force_flip_edges_cmd
+# import RV3_force_attributes_cmd
+import RV3_force_modify_vertices_cmd
+import RV3_force_modify_edges_cmd
+import RV3_force_move_vertices_cmd
+
+# import RV3_force_flip_edges_cmd
 
 
 __commandname__ = "RV3_toolbar_modify_force"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
-
-    pattern = scene.get("force")[0]
-    if not pattern:
-        print("There is no ForceDiagram in the scene.")
-        return
+    get_object_by_name("ForceDiagram")
 
     options = [
-        "DiagramAttributes",
+        # "DiagramAttributes",
         "VerticesAttributes",
         "EdgesAttributes",
         "MoveVertices",
-        "FlipEdges",
+        # "FlipEdges",
     ]
     option = compas_rhino.rs.GetString("Modify force diagram:", strings=options)
 
     if not option:
         return
 
-    if option == "DiagramAttributes":
-        RV2force_attributes_cmd.RunCommand(True)
+    # if option == "DiagramAttributes":
+    #     RV3_force_attributes_cmd.RunCommand(True)
 
-    elif option == "VerticesAttributes":
-        RV2force_modify_vertices_cmd.RunCommand(True)
+    if option == "VerticesAttributes":
+        RV3_force_modify_vertices_cmd.RunCommand(True)
 
     elif option == "EdgesAttributes":
-        RV2force_modify_edges_cmd.RunCommand(True)
+        RV3_force_modify_edges_cmd.RunCommand(True)
 
     elif option == "MoveVertices":
-        RV2force_move_vertices_cmd.RunCommand(True)
+        RV3_force_move_vertices_cmd.RunCommand(True)
 
-    elif option == "FlipEdges":
-        RV2force_flip_edges_cmd.RunCommand(True)
+    # elif option == "FlipEdges":
+    #     RV3_force_flip_edges_cmd.RunCommand(True)
 
 
 # ==============================================================================

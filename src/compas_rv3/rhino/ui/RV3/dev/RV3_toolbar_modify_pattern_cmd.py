@@ -3,28 +3,24 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
-import RV2pattern_modify_vertices_cmd
-import RV2pattern_modify_edges_cmd
-import RV2pattern_move_vertices_cmd
-import RV2pattern_delete_cmd
-import RV2pattern_relax_cmd
-import RV2pattern_smooth_cmd
+import RV3_pattern_modify_vertices_cmd
+import RV3_pattern_modify_edges_cmd
+import RV3_pattern_move_vertices_cmd
+import RV3_pattern_delete_cmd
+import RV3_pattern_relax_cmd
+import RV3_pattern_smooth_cmd
 
 
 __commandname__ = "RV3_toolbar_modify_pattern"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
-
-    pattern = scene.get("pattern")[0]
-    if not pattern:
-        print("There is no Pattern in the scene.")
-        return
+    get_object_by_name("Pattern")
 
     options = [
         "VerticesAttributes",
@@ -40,22 +36,22 @@ def RunCommand(is_interactive):
         return
 
     if option == "VerticesAttributes":
-        RV2pattern_modify_vertices_cmd.RunCommand(True)
+        RV3_pattern_modify_vertices_cmd.RunCommand(True)
 
     elif option == "EdgesAttributes":
-        RV2pattern_modify_edges_cmd.RunCommand(True)
+        RV3_pattern_modify_edges_cmd.RunCommand(True)
 
     elif option == "MoveVertices":
-        RV2pattern_move_vertices_cmd.RunCommand(True)
+        RV3_pattern_move_vertices_cmd.RunCommand(True)
 
     elif option == "DeleteVertices":
-        RV2pattern_delete_cmd.RunCommand(True)
+        RV3_pattern_delete_cmd.RunCommand(True)
 
     elif option == "Relax":
-        RV2pattern_relax_cmd.RunCommand(True)
+        RV3_pattern_relax_cmd.RunCommand(True)
 
     elif option == "Smooth":
-        RV2pattern_smooth_cmd.RunCommand(True)
+        RV3_pattern_smooth_cmd.RunCommand(True)
 
 
 # ==============================================================================

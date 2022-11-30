@@ -2,12 +2,25 @@ import os
 from compas.plugins import plugin
 
 from compas_ui.values import Settings
-# from compas_ui.values import BoolValue
-# from compas_ui.values import FloatValue
+from compas_ui.values import BoolValue
+from compas_ui.values import FloatValue
+from compas_ui.values import IntValue
 
 HERE = os.path.dirname(__file__)
 
-SETTINGS = Settings({})
+
+SETTINGS = Settings(
+    {
+        "show.forces": BoolValue(False),
+        "show.angles": BoolValue(True),
+        "tol.angles": FloatValue(5.0),
+        "tna.vertical.kmax": IntValue(300),
+        "tna.vertical.zmax": FloatValue(4.0),
+        "tna.horizontal.kmax": IntValue(100),
+        "tna.horizontal.alpha": IntValue(100),
+        "tna.horizontal.refreshrate": IntValue(10),
+    }
+)
 
 
 @plugin(category="ui")
