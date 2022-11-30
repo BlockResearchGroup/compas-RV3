@@ -5,21 +5,19 @@ from __future__ import division
 from compas.utilities import flatten
 
 import compas_rhino
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_boundary_supports"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    pattern = scene.get("pattern")[0]
-    if not pattern:
-        print("There is no Pattern in the scene.")
-        return
+    pattern = get_object_by_name("Pattern")
 
     # mark all fixed vertices as anchors
     # mark all leaves as anchors
@@ -41,7 +39,7 @@ def RunCommand(is_interactive):
         print(
             "Fixed vertices of the pattern have automatically been defined as supports."
         )
-        scene.update()
+        ui.scene.update()
 
     # manually Select or Unselect
     # should this not be included in the while loop?
@@ -60,7 +58,7 @@ def RunCommand(is_interactive):
         option2 = compas_rhino.rs.GetString("Selection mode:", strings=options)
 
         if not option2:
-            return
+            break
 
         if option2 == "AllBoundaryVertices":
             keys = list(set(flatten(pattern.datastructure.vertices_on_boundaries())))
@@ -107,7 +105,8 @@ def RunCommand(is_interactive):
             else:
                 pattern.datastructure.vertices_attribute("is_anchor", False, keys=keys)
 
-        scene.update()
+        ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

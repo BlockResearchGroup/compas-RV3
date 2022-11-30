@@ -4,23 +4,19 @@ from __future__ import division
 
 import compas_rhino
 from compas.utilities import flatten
-
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 __commandname__ = "RV3_form_move_vertices"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    form = scene.get("form")[0]
-    if not form:
-        print("There is no FormDiagram in the scene.")
-        return
-
-    thrust = scene.get("thrust")[0]
+    form = get_object_by_name("FormDiagram")
+    thrust = get_object_by_name("ThrustDiagram")
 
     # show the form vertices
     form_vertices = "{}::vertices".format(form.settings["layer"])
@@ -39,7 +35,7 @@ def RunCommand(is_interactive):
     options = ["ByContinuousEdges", "Manual"]
     option = compas_rhino.rs.GetString("Selection Type.", strings=options)
     if not option:
-        scene.update()
+        ui.scene.update()
         return
 
     if option == "ByContinuousEdges":
@@ -98,7 +94,8 @@ def RunCommand(is_interactive):
     # the scene needs to be updated
     # even if the vertices where not modified
     # to reset group visibility to the configuration of settings
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

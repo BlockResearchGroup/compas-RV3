@@ -2,31 +2,27 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import compas_rhino
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 __commandname__ = "RV3_pattern_relax"
 
 
+@UI.error()
 def RunCommand(is_interactive):
-    scene = get_scene()
-    if not scene:
-        return
 
-    proxy = get_proxy()
-    if not proxy:
-        return
+    ui = UI()
 
-    pattern = scene.get("pattern")[0]
-    if not pattern:
-        print("There is no Pattern in the scene.")
-        return
+    pattern = get_object_by_name("Pattern")
 
     fixed = list(pattern.datastructure.vertices_where({"is_fixed": True}))
 
     if not fixed:
-        print("Pattern has no fixed vertices! Relaxation requires fixed vertices.")
+        compas_rhino.display_message("Pattern has no fixed vertices! Relaxation requires fixed vertices.")
         return
 
-    relax = proxy.function("compas.numerical.fd_numpy")
+    relax = ui.proxy.function("compas.numerical.fd_numpy")
 
     key_index = pattern.datastructure.key_index()
     xyz = pattern.datastructure.vertices_attributes("xyz")
@@ -42,7 +38,8 @@ def RunCommand(is_interactive):
         index = key_index[key]
         pattern.datastructure.vertex_attributes(key, "xyz", xyz[index])
 
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

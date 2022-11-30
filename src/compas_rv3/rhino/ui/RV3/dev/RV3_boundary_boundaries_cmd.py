@@ -14,6 +14,9 @@ from compas.geometry import intersection_line_line_xy
 from compas.geometry import midpoint_point_point_xy
 from compas.utilities import pairwise
 
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
+
 
 __commandname__ = "RV3_boundary_boundaries"
 
@@ -94,20 +97,14 @@ def _draw_labels(pattern, openings):
 TOL2 = 0.001**2
 
 
+@UI.error()
 def RunCommand(is_interactive):
-    scene = get_scene()
-    if not scene:
-        return
 
-    proxy = get_proxy()
-    if not proxy:
-        return
+    ui = UI()
 
-    relax = proxy.function("compas.numerical.fd_numpy")
+    relax = ui.proxy.function("compas.numerical.fd_numpy")
 
-    pattern = scene.get("pattern")[0]
-    if not pattern:
-        return
+    pattern = get_object_by_name("Pattern")
 
     # split the exterior boundary
     openings = split_boundary(pattern.datastructure)
@@ -163,7 +160,7 @@ def RunCommand(is_interactive):
         print("converged after %s iterations" % count)
 
     compas_rhino.delete_objects(guids, purge=True)
-    scene.update()
+    ui.scene.update()
     guids = draw_labels()
 
     # allow user to select label
@@ -225,19 +222,19 @@ def RunCommand(is_interactive):
                     print("converged after %s iterations" % count)
 
             compas_rhino.delete_objects(guids, purge=True)
-            scene.update()
+            ui.scene.update()
             guids = draw_labels()
 
             break
 
     compas_rhino.delete_objects(guids, purge=True)
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================
 # Main
 # ==============================================================================
-
 if __name__ == "__main__":
 
     RunCommand(True)

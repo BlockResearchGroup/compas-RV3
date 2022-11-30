@@ -4,29 +4,27 @@ from __future__ import division
 
 import compas_rhino
 from compas.utilities import flatten
-
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 
 __commandname__ = "RV3_pattern_smooth"
 
 
+@UI.error()
 def RunCommand(is_interactive):
-    scene = get_scene()
-    if not scene:
-        return
 
-    proxy = get_proxy()
-    if not proxy:
-        return
+    ui = UI()
 
-    pattern = scene.get("pattern")[0]
+    pattern = get_object_by_name("Pattern")
+
     if not pattern:
-        print("There is no Pattern in the scene.")
+        print("There is no FormDiagram in the scene.")
         return
 
     fixed = list(pattern.datastructure.vertices_where({"is_fixed": True}))
 
     if not fixed:
-        print("Pattern has no fixed vertices! Smoothing requires fixed vertices.")
+        compas_rhino.display_message("Pattern has no fixed vertices! Smoothing requires fixed vertices.")
         return
 
     options = ["True", "False"]
@@ -37,7 +35,7 @@ def RunCommand(is_interactive):
     )
 
     if option is None:
-        print("Pattern smoothing aborted!")
+        compas_rhino.display_message("Pattern smoothing aborted!")
         return
 
     if option == "True":
@@ -45,7 +43,8 @@ def RunCommand(is_interactive):
 
     pattern.datastructure.smooth_area(fixed=fixed)
 
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

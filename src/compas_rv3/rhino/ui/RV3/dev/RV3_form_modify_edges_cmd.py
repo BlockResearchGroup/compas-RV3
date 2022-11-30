@@ -5,25 +5,21 @@ from __future__ import division
 from compas.utilities import flatten
 
 import compas_rhino
-
+from compas_ui.ui import UI
+from compas_rv3.rhino.helpers import get_object_by_name
 # from compas_rv3.rhino import ModifyAttributesForm
 
 
 __commandname__ = "RV3_form_modify_edges"
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()
-    if not scene:
-        return
+    ui = UI()
 
-    form = scene.get("form")[0]
-    if not form:
-        print("There is no FormDiagram in the scene.")
-        return
-
-    thrust = scene.get("thrust")[0]
+    form = get_object_by_name("FormDiagram")
+    thrust = get_object_by_name("ThrustDiagram")
 
     options = ["All", "Continuous", "Parallel", "Manual"]
     option = compas_rhino.rs.GetString("Selection Type.", strings=options)
@@ -105,7 +101,8 @@ def RunCommand(is_interactive):
             if thrust:
                 thrust.settings["_is.valid"] = False
 
-    scene.update()
+    ui.scene.update()
+    ui.record()
 
 
 # ==============================================================================

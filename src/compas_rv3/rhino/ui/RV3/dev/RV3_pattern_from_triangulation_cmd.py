@@ -109,6 +109,7 @@ def RunCommand(is_interactive):
 
     ui.scene.add(pattern, name="Pattern")
     ui.scene.update()
+    ui.record()
 
 
 if __name__ == "__main__":
