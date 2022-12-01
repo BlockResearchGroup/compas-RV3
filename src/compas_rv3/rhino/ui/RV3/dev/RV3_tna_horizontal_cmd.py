@@ -38,9 +38,9 @@ def RunCommand(is_interactive):
         compas_rhino.display_message("No ThrustDiagram found in the active group.")
         return
 
-    kmax = ui.scene.settings["tna.horizontal.kmax"]
-    alpha = ui.scene.settings["tna.horizontal.alpha"]
-    refresh = ui.scene.settings["tna.horizontal.refreshrate"]
+    kmax = ui.registry["RV3"]["tna.horizontal.kmax"]
+    alpha = ui.registry["RV3"]["tna.horizontal.alpha"]
+    refresh = ui.registry["RV3"]["tna.horizontal.refreshrate"]
 
     options = ["Alpha", "Iterations", "RefreshRate"]
 
@@ -81,9 +81,9 @@ def RunCommand(is_interactive):
     if refresh > kmax:
         refresh = 0
 
-    ui.scene.settings["tna.horizontal.kmax"] = kmax
-    ui.scene.settings["tna.horizontal.alpha"] = alpha
-    ui.scene.settings["tna.horizontal.refreshrate"] = refresh
+    ui.registry["RV3"]["tna.horizontal.kmax"] = kmax
+    ui.registry["RV3"]["tna.horizontal.alpha"] = alpha
+    ui.registry["RV3"]["tna.horizontal.refreshrate"] = refresh
 
     force.artist.clear()
 
@@ -111,7 +111,7 @@ def RunCommand(is_interactive):
     thrust.settings["_is.valid"] = False
 
     max_angle = max(form.diagram.edges_attribute("_a"))
-    tol = ui.scene.settings["tol.angles"]
+    tol = ui.registry["RV3"]["tol.angles"]
 
     if max_angle < tol:
         compas_rhino.display_message("Horizontal equilibrium found!\nMaximum angle deviation: {}".format(max_angle))

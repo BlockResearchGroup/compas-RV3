@@ -36,8 +36,8 @@ def RunCommand(is_interactive):
     bbox = form.diagram.bounding_box_xy()
     diagonal = length_vector(subtract_vectors(bbox[2], bbox[0]))
 
-    zmax = ui.scene.settings["tna.vertical.zmax"]
-    kmax = ui.scene.settings["tna.vertical.kmax"]
+    zmax = ui.registry["RV3"]["tna.vertical.zmax"]
+    kmax = ui.registry["RV3"]["tna.vertical.kmax"]
 
     options = ["TargetHeight"]
 
@@ -56,7 +56,7 @@ def RunCommand(is_interactive):
             if new_zmax or new_zmax is not None:
                 zmax = new_zmax
 
-    ui.scene.settings["tna.vertical.zmax"] = zmax
+    ui.registry["RV3"]["tna.vertical.zmax"] = zmax
 
     result = vertical(form.diagram.data, zmax, kmax=kmax)
 

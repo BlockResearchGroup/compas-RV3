@@ -53,7 +53,7 @@ def RunCommand(is_interactive):
     diagonal = length_vector(subtract_vectors(bbox_form[2], bbox_form[0]))
     zmax = 0.25 * diagonal
 
-    ui.scene.settings["tna.vertical.zmax"] = round(zmax, 1)
+    ui.registry["RV3"]["tna.vertical.zmax"] = round(zmax, 1)
 
     group = ui.scene.active_object
     group.clear()
