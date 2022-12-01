@@ -32,11 +32,3 @@ class PatternObject(MeshObject):
             "from_surface.density.V": IntValue(10),
         }
     )
-
-    # @property
-    # def pattern(self):
-    #     return self.item
-
-    # @pattern.setter
-    # def pattern(self, pattern):
-    #     self.item = pattern
