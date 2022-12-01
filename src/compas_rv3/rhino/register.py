@@ -43,12 +43,16 @@ def pre_undo(ui):
 def post_undo(ui):
     form = ui.scene.active_object.get_child_by_name("FormDiagram")
     force = ui.scene.active_object.get_child_by_name("ForceDiagram")
+    thrust = ui.scene.active_object.get_child_by_name("ThrustDiagram")
     if form:
         if force:
             form.diagram.dual = force.diagram
+    if thrust:
+        if force:
+            thrust.diagram.dual = force.diagram
     if force:
         if form:
-            force.diagram.dual = form.diagram
+            force.diagram.primal = form.diagram
 
 
 @plugin(category="ui")
@@ -60,9 +64,13 @@ def pre_redo(ui):
 def post_redo(ui):
     form = ui.scene.active_object.get_child_by_name("FormDiagram")
     force = ui.scene.active_object.get_child_by_name("ForceDiagram")
+    thrust = ui.scene.active_object.get_child_by_name("ThrustDiagram")
     if form:
         if force:
             form.diagram.dual = force.diagram
+    if thrust:
+        if force:
+            thrust.diagram.dual = force.diagram
     if force:
         if form:
-            force.diagram.dual = form.diagram
+            force.diagram.primal = form.diagram
