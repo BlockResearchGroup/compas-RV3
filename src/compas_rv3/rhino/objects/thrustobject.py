@@ -124,7 +124,7 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             color = {}
             color_free = self.settings["color.vertices"] if self.is_valid else self.settings["color.invalid"]
             color_anchor = self.settings["color.vertices:is_anchor"]
-            color.update({vertex: color_free for vertex in self.diagram.vertices_where(is_anchor=False)})
+            color.update({vertex: color_free for vertex in self.diagram.vertices()})
             color.update({vertex: color_anchor for vertex in self.diagram.vertices_where(is_anchor=True)})
             guids = self.artist.draw_vertices(color)
             self.guids += guids
