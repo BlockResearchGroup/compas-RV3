@@ -66,7 +66,7 @@ def RunCommand(is_interactive):
 
         elif option2 == "ByContinuousEdges":
             edges = pattern.select_edges()
-            vertices = list(set(flatten([pattern.mesh.vertices_on_edge_loop(edge) for edge in edges])))
+            vertices = list(set(flatten([pattern.mesh.edge_loop_vertices(edge) for edge in edges])))
 
         elif option2 == "Manual":
             vertices = pattern.select_vertices()
