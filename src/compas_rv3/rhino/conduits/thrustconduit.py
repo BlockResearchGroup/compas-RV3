@@ -28,23 +28,24 @@ class SelfWeightConduit(BaseConduit):
         Minimum length of a reaction force vector.
     """
 
-    def __init__(self, mesh, color, scale, tol, **kwargs):
+    def __init__(self, diagram, color, scale=1.0, tol=1e-3, **kwargs):
         super(SelfWeightConduit, self).__init__(**kwargs)
-        self.mesh = mesh
+        self.diagram = diagram
         self.color = color
         self.scale = scale
-        self.tol = tol
+        self.tol2 = tol**2
         self.arrow_size = 0.1
 
-    def DrawForeground(self, e):
-        for vertex in self.mesh.vertices():
-            ep = self.mesh.vertex_coordinates(vertex)
-            area = self.mesh.vertex_tributary_area(vertex)
-            thickness = self.mesh.vertex_attribute(vertex, "t")
+    def PostDrawObjects(self, e):
+        for vertex in self.diagram.vertices():
+            area = self.diagram.vertex_tributary_area(vertex)
+            thickness = self.diagram.vertex_attribute(vertex, "t")
             weight = area * thickness
             load = scale_vector((0, 0, 1), self.scale * weight)
-            if length_vector_sqrd(load) < self.tol**2:
+            if length_vector_sqrd(load) < self.tol2:
                 continue
+
+            ep = self.diagram.vertex_coordinates(vertex)
             sp = add_vectors(ep, load)
             line = Line(Point3d(*sp), Point3d(*ep))
             e.Display.DrawArrow(line, FromArgb(*self.color), 0, self.arrow_size)
@@ -65,21 +66,22 @@ class ReactionConduit(BaseConduit):
         Minimum length of a reaction force vector.
     """
 
-    def __init__(self, mesh, color, scale, tol, **kwargs):
+    def __init__(self, diagram, color, scale=1.0, tol=1e-3, **kwargs):
         super(ReactionConduit, self).__init__(**kwargs)
-        self.mesh = mesh
+        self.diagram = diagram
         self.color = color
         self.scale = scale
-        self.tol = tol
+        self.tol2 = tol**2
         self.arrow_size = 0.1
 
-    def DrawForeground(self, e):
-        for vertex in self.mesh.vertices_where({"is_anchor": True}):
-            ep = self.mesh.vertex_coordinates(vertex)
-            r = self.mesh.vertex_attributes(vertex, ["_rx", "_ry", "_rz"])
+    def PostDrawObjects(self, e):
+        for vertex in self.diagram.vertices_where(is_anchor=True):
+            r = self.diagram.vertex_attributes(vertex, ["_rx", "_ry", "_rz"])
             r = scale_vector(r, self.scale)
-            if length_vector_sqrd(r) < self.tol**2:
+            if length_vector_sqrd(r) < self.tol2:
                 continue
+
+            ep = self.diagram.vertex_coordinates(vertex)
             sp = add_vectors(ep, r)
             line = Line(Point3d(*sp), Point3d(*ep))
             e.Display.DrawArrow(line, FromArgb(*self.color), 0, self.arrow_size)
@@ -100,21 +102,22 @@ class LoadConduit(BaseConduit):
         Minimum length of a reaction force vector.
     """
 
-    def __init__(self, mesh, color, scale, tol, **kwargs):
+    def __init__(self, diagram, color, scale=1.0, tol=1e-3, **kwargs):
         super(LoadConduit, self).__init__(**kwargs)
-        self.mesh = mesh
+        self.diagram = diagram
         self.color = color
         self.scale = scale
-        self.tol = tol
+        self.tol2 = tol**2
         self.arrow_size = 0.1
 
-    def DrawForeground(self, e):
-        for vertex in self.mesh.vertices():
-            ep = self.mesh.vertex_coordinates(vertex)
-            live = self.mesh.vertex_attribute(vertex, "pz")
+    def PostDrawObjects(self, e):
+        for vertex in self.diagram.vertices():
+            live = self.diagram.vertex_attribute(vertex, "pz")
             load = scale_vector((0, 0, 1), self.scale * live)
-            if length_vector_sqrd(load) < self.tol**2:
+            if length_vector_sqrd(load) < self.tol2:
                 continue
+
+            ep = self.diagram.vertex_coordinates(vertex)
             sp = add_vectors(ep, load)
             line = Line(Point3d(*sp), Point3d(*ep))
             e.Display.DrawArrow(line, FromArgb(*self.color), 0, self.arrow_size)
@@ -135,21 +138,22 @@ class ResidualConduit(BaseConduit):
         Minimum length of a reaction force vector.
     """
 
-    def __init__(self, mesh, color, scale, tol, **kwargs):
+    def __init__(self, diagram, color, scale=1.0, tol=1e-3, **kwargs):
         super(ResidualConduit, self).__init__(**kwargs)
-        self.mesh = mesh
+        self.diagram = diagram
         self.color = color
         self.scale = scale
-        self.tol = tol
+        self.tol2 = tol**2
         self.arrow_size = 0.1
 
-    def DrawForeground(self, e):
-        for vertex in self.mesh.vertices_where({"is_anchor": False}):
-            ep = self.mesh.vertex_coordinates(vertex)
-            r = self.mesh.vertex_attributes(vertex, ["_rx", "_ry", "_rz"])
+    def PostDrawObjects(self, e):
+        for vertex in self.diagram.vertices_where(is_anchor=False):
+            r = self.diagram.vertex_attributes(vertex, ["_rx", "_ry", "_rz"])
             r = scale_vector(r, self.scale)
             if length_vector_sqrd(r) < self.tol**2:
                 continue
+
+            ep = self.diagram.vertex_coordinates(vertex)
             sp = add_vectors(ep, r)
             line = Line(Point3d(*sp), Point3d(*ep))
             e.Display.DrawArrow(line, FromArgb(*self.color), 0, self.arrow_size)

@@ -2,11 +2,9 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-
 from compas_rhino.conduits import BaseConduit
 
 from System.Drawing.Color import FromArgb
-
 from Rhino.Geometry import Point3d
 
 
@@ -34,7 +32,4 @@ class SubdConduit(BaseConduit):
             sp = line[0]
             ep = line[1]
             color = self.color
-            e.Display.DrawLine(Point3d(*sp),
-                               Point3d(*ep),
-                               FromArgb(*color),
-                               self.thickness)
+            e.Display.DrawLine(Point3d(*sp), Point3d(*ep), FromArgb(*self.color), self.thickness)

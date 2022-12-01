@@ -102,6 +102,10 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             del self._conduit_residuals
             self._conduit_residuals = None
 
+    def clear(self):
+        super(RhinoThrustObject, self).clear()
+        self.clear_conduits()
+
     def draw(self):
         """Draw the objects representing the thrust diagram."""
         ui = UI()
@@ -149,7 +153,7 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             faces = list(self.diagram.faces_where(_is_loaded=True))
             color = {face: self.settings["color.faces"] if self.is_valid else self.settings["color.invalid"] for face in faces}
 
-            if self.settings["show.stresses"] and self.is_valid:
+            if self.is_valid and self.settings["show.stresses"]:
                 vertices = list(self.diagram.vertices())
                 vertex_colors = {vertex: self.settings["color.vertices"] if self.is_valid else self.settings["color.invalid"] for vertex in vertices}
                 stresses = [self.diagram.vertex_lumped_stress(vertex) for vertex in vertices]
@@ -186,7 +190,7 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
         # selfweight
         self.conduit_selfweight.disable()
         if self.is_valid and self.settings["show.selfweight"]:
-            self.conduit_selfweight.color = self.settings["color.selfweight"]
+            self.conduit_selfweight.color = self.settings["color.selfweight"].rgb255
             self.conduit_selfweight.scale = self.settings["scale.selfweight"]
             self.conduit_selfweight.tol = self.settings["tol.selfweight"]
             self.conduit_selfweight.enable()
@@ -194,7 +198,7 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
         # loads
         self.conduit_loads.disable()
         if self.is_valid and self.settings["show.loads"]:
-            self.conduit_loads.color = self.settings["color.loads"]
+            self.conduit_loads.color = self.settings["color.loads"].rgb255
             self.conduit_loads.scale = self.settings["scale.externalforces"]
             self.conduit_loads.tol = self.settings["tol.externalforces"]
             self.conduit_loads.enable()
@@ -202,7 +206,7 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
         # residuals
         self.conduit_residuals.disable()
         if self.is_valid and self.settings["show.residuals"]:
-            self.conduit_residuals.color = self.settings["color.residuals"]
+            self.conduit_residuals.color = self.settings["color.residuals"].rgb255
             self.conduit_residuals.scale = self.settings["scale.residuals"]
             self.conduit_residuals.tol = self.settings["tol.residuals"]
             self.conduit_residuals.enable()
@@ -210,7 +214,7 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
         # reactions
         self.conduit_reactions.disable()
         if self.is_valid and self.settings["show.reactions"]:
-            self.conduit_reactions.color = self.settings["color.reactions"]
+            self.conduit_reactions.color = self.settings["color.reactions"].rgb255
             self.conduit_reactions.scale = self.settings["scale.externalforces"]
             self.conduit_reactions.tol = self.settings["tol.externalforces"]
             self.conduit_reactions.enable()

@@ -5,8 +5,9 @@ from __future__ import division
 import compas_rhino
 from compas.geometry import Translation
 from compas_tna.equilibrium import horizontal_nodal
-# from compas_rv3.rhino import HorizontalConduit
+from compas_rv3.rhino.conduits import HorizontalConduit
 from compas_ui.ui import UI
+
 
 __commandname__ = "RV3_tna_horizontal"
 
@@ -16,12 +17,12 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    # def redraw(k, xy, edges):
-    #     if k % conduit.refreshrate:
-    #         return
-    #     print(k)
-    #     conduit.lines = [[[xy[i][1], -xy[i][0]], [xy[j][1], -xy[j][0]]] for i, j in edges]
-    #     conduit.redraw()
+    def redraw(k, xy, edges):
+        if k % conduit.refreshrate:
+            return
+        print(k)
+        conduit.lines = [[[xy[i][1], -xy[i][0]], [xy[j][1], -xy[j][0]]] for i, j in edges]
+        conduit.redraw()
 
     form = ui.scene.active_object.get_child_by_name("FormDiagram")
     if not form:
@@ -87,12 +88,12 @@ def RunCommand(is_interactive):
 
     force.artist.clear()
 
-    # if refresh > 0:
-    #     conduit = HorizontalConduit([], refreshrate=refresh)
-    #     with conduit.enabled():
-    #         horizontal_nodal(form.diagram, force.diagram, kmax=kmax, alpha=alpha, callback=redraw)
-    # else:
-    horizontal_nodal(form.diagram, force.diagram, kmax=kmax, alpha=alpha)
+    if refresh > 0:
+        conduit = HorizontalConduit([], refreshrate=refresh)
+        with conduit.enabled():
+            horizontal_nodal(form.diagram, force.diagram, kmax=kmax, alpha=alpha, callback=redraw)
+    else:
+        horizontal_nodal(form.diagram, force.diagram, kmax=kmax, alpha=alpha)
 
     bbox_form = form.diagram.bounding_box_xy()
     bbox_force = force.diagram.bounding_box_xy()
