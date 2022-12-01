@@ -10,7 +10,7 @@ class ThrustArtist(DiagramArtist):
     Base artist for RV3 thrust diagrams.
     """
 
-    def draw_selfweight(self, color, scale, tol=1e-3):
+    def draw_selfweight(self, vertices, color, scale, tol=1e-3):
         """Draw the selfweight at each vertex of the diagram.
 
         Parameters
@@ -31,7 +31,7 @@ class ThrustArtist(DiagramArtist):
         """
         raise NotImplementedError
 
-    def draw_loads(self, color, scale, tol=1e-3):
+    def draw_loads(self, vertices, color, scale, tol=1e-3):
         """Draw the externally applied loads at all vertices of the diagram.
 
         Parameters
@@ -52,7 +52,7 @@ class ThrustArtist(DiagramArtist):
         """
         raise NotImplementedError
 
-    def draw_reactions(self, color, scale, tol=1e-3):
+    def draw_reactions(self, vertices, color, scale, tol=1e-3):
         """Draw the reaction forces at the anchored vertices of the diagram.
 
         Parameters
@@ -73,7 +73,7 @@ class ThrustArtist(DiagramArtist):
         """
         raise NotImplementedError
 
-    def draw_residuals(self, color, scale, tol=1e-3):
+    def draw_residuals(self, vertices, color, scale, tol=1e-3):
         """Draw the vertical component of the residual forces at the non-anchored vertices of the diagram.
 
         Parameters
@@ -94,7 +94,7 @@ class ThrustArtist(DiagramArtist):
         """
         raise NotImplementedError
 
-    def draw_pipes(self, color, scale, tol=1e-3):
+    def draw_pipes(self, edges, color, scale, tol=1e-3):
         """Draw pipes representing the axial forces in the edges of the diagram.
 
         Parameters
