@@ -34,7 +34,7 @@ def RunCommand(is_interactive):
 
     if vertices:
         compas_rhino.rs.UnselectAllObjects()
-        select_vertices(pattern, vertices)
+        select_vertices(pattern, vertices)  # noqa F821
 
         if pattern.move_vertices(vertices):
             ui.scene.update()

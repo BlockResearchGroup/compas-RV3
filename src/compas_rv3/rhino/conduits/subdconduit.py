@@ -31,5 +31,5 @@ class SubdConduit(BaseConduit):
         for line in self.lines:
             sp = line[0]
             ep = line[1]
-            color = self.color
+            # color = self.color
             e.Display.DrawLine(Point3d(*sp), Point3d(*ep), FromArgb(*self.color), self.thickness)
