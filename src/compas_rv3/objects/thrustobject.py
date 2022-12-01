@@ -18,7 +18,6 @@ class ThrustObject(DiagramObject):
 
     SETTINGS = Settings(
         {
-            "_is.valid": BoolValue(False),
             "layer": StrValue("RV2::ThrustDiagram"),
             "show.vertices": BoolValue(True),
             "show.edges": BoolValue(False),
@@ -50,3 +49,7 @@ class ThrustObject(DiagramObject):
             "tol.pipes": FloatValue(1e-3),
         }
     )
+
+    def __init__(self, *args, **kwargs):
+        super(ThrustObject, self).__init__(*args, **kwargs)
+        self.is_valid = False

@@ -79,5 +79,6 @@ class RhinoFormObject(RhinoDiagramObject, FormObject):
                     if angle > tol:
                         text[edge] = "{:.0f}".format(angle)
                         color[edge] = Color.from_i((angle - amin) / (amax - amin))
-                guids = self.artist.draw_edgelabels(text, color)
+                # what about colors?
+                guids = self.artist.draw_edgelabels(text)
                 self.guids += guids

@@ -46,7 +46,7 @@ def RunCommand(is_interactive):
                 # update the corresponding form diagram vertices
                 z = thrust.diagram.vertex_attribute(vertex, "z")
                 form.diagram.vertex_attribute(vertex, "z", z)
-            thrust.settings["_is.valid"] = False
+            thrust.is_valid = False
 
     ui.scene.update()
     ui.record()

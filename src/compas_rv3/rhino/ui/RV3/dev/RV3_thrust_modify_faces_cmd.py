@@ -46,7 +46,7 @@ def RunCommand(is_interactive):
         if form.update_faces_attributes(faces, names=public):
             thrust.diagram.data = form.diagram.data
             thrust.name = thrust_name
-            thrust.settings["_is.valid"] = False
+            thrust.is_valid = False
 
     ui.scene.update()
     ui.record()

@@ -81,7 +81,7 @@ def RunCommand(is_interactive):
     force.diagram.primal = form.diagram
     thrust.diagram.dual = force.diagram
 
-    thrust.settings["_is.valid"] = True
+    thrust.is_valid"] = True
 
     compas_rhino.display_message("Vertical equilibrium found!\nThrustDiagram object successfully created with target height of {}.".format(zmax))
 

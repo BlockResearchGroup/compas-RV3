@@ -44,7 +44,7 @@ def RunCommand(is_interactive):
     form.diagram.smooth_area(fixed=fixed)
 
     if thrust:
-        thrust.settings["_is.valid"] = False
+        thrust.is_valid = False
 
     ui.scene.update()
     ui.record()

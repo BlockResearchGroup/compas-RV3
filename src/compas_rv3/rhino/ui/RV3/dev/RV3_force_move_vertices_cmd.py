@@ -42,7 +42,7 @@ def RunCommand(is_interactive):
             if force.diagram.primal:
                 force.diagram.update_angle_deviations()
             if thrust:
-                thrust.settings["_is.valid"] = False
+                thrust.is_valid = False
 
     # the scene needs to be updated
     # even if the vertices where not modified

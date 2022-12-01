@@ -63,7 +63,7 @@ def RunCommand(is_interactive):
         public = [name for name in form.diagram.default_vertex_attributes if not name.startswith("_")]
         if form.update_vertices_attributes(vertices, names=public):
             if thrust:
-                thrust.settings["_is.valid"] = False
+                thrust.is_valid = False
 
     ui.scene.update()
     ui.record()
