@@ -5,7 +5,10 @@ from __future__ import division
 from compas_rhino.conduits import BaseConduit
 
 from compas.geometry import add_vectors
+from compas.geometry import subtract_vectors
 from compas.geometry import scale_vector
+from compas.geometry import centroid_points
+from compas.geometry import dot_vectors
 from compas.geometry import length_vector_sqrd
 
 from System.Drawing.Color import FromArgb
@@ -33,22 +36,25 @@ class SelfWeightConduit(BaseConduit):
         self.diagram = diagram
         self.color = color
         self.scale = scale
-        self.tol2 = tol**2
-        self.arrow_size = 0.1
+        self.tol = tol
 
     def PostDrawObjects(self, e):
+        color = FromArgb(*self.color)
+        lines = []
         for vertex in self.diagram.vertices():
             area = self.diagram.vertex_tributary_area(vertex)
             thickness = self.diagram.vertex_attribute(vertex, "t")
-            weight = area * thickness
-            load = scale_vector((0, 0, 1), self.scale * weight)
-            if length_vector_sqrd(load) < self.tol2:
+            weight = area * thickness * self.scale
+            if weight < self.tol:
                 continue
 
-            ep = self.diagram.vertex_coordinates(vertex)
-            sp = add_vectors(ep, load)
-            line = Line(Point3d(*sp), Point3d(*ep))
-            e.Display.DrawArrow(line, FromArgb(*self.color), 0, self.arrow_size)
+            start = self.diagram.vertex_coordinates(vertex)
+            end = [start[0], start[1], start[2] - weight]
+            end = [start[0], start[1], start[2] - weight]
+            line = Line(Point3d(*start), Point3d(*end))
+            lines.append(line)
+        if lines:
+            e.Display.DrawArrows(lines, color)
 
 
 class ReactionConduit(BaseConduit):
@@ -71,20 +77,26 @@ class ReactionConduit(BaseConduit):
         self.diagram = diagram
         self.color = color
         self.scale = scale
-        self.tol2 = tol**2
-        self.arrow_size = 0.1
+        self.tol = tol
 
     def PostDrawObjects(self, e):
-        for vertex in self.diagram.vertices_where(is_anchor=True):
-            r = self.diagram.vertex_attributes(vertex, ["_rx", "_ry", "_rz"])
-            r = scale_vector(r, self.scale)
-            if length_vector_sqrd(r) < self.tol2:
+        color = FromArgb(*self.color)
+        scale = self.scale
+        tol2 = self.tol**2
+        mesh = self.diagram
+        lines = []
+        for vertex in mesh.vertices_where(is_anchor=True):
+            reaction = mesh.vertex_attributes(vertex, ["_rx", "_ry", "_rz"])
+            reaction = scale_vector(reaction, -scale)
+            if length_vector_sqrd(reaction) < tol2:
                 continue
 
-            ep = self.diagram.vertex_coordinates(vertex)
-            sp = add_vectors(ep, r)
-            line = Line(Point3d(*sp), Point3d(*ep))
-            e.Display.DrawArrow(line, FromArgb(*self.color), 0, self.arrow_size)
+            start = mesh.vertex_attributes(vertex, "xyz")
+            end = subtract_vectors(start, reaction)
+            line = Line(Point3d(*end), Point3d(*start))
+            lines.append(line)
+        if lines:
+            e.Display.DrawArrows(lines, color)
 
 
 class LoadConduit(BaseConduit):
@@ -107,20 +119,24 @@ class LoadConduit(BaseConduit):
         self.diagram = diagram
         self.color = color
         self.scale = scale
-        self.tol2 = tol**2
-        self.arrow_size = 0.1
+        self.tol = tol
 
     def PostDrawObjects(self, e):
-        for vertex in self.diagram.vertices():
-            live = self.diagram.vertex_attribute(vertex, "pz")
-            load = scale_vector((0, 0, 1), self.scale * live)
-            if length_vector_sqrd(load) < self.tol2:
+        color = FromArgb(*self.color)
+        scale = self.scale
+        tol2 = self.tol**2
+        lines = []
+        for vertex in self.cablemesh.vertices():
+            start = self.cablemesh.vertex_coordinates(vertex)
+            load = self.cablemesh.vertex_attributes(vertex, ["px", "py", "pz"])
+            load = scale_vector(load, scale)
+            if length_vector_sqrd(load) < tol2:
                 continue
-
-            ep = self.diagram.vertex_coordinates(vertex)
-            sp = add_vectors(ep, load)
-            line = Line(Point3d(*sp), Point3d(*ep))
-            e.Display.DrawArrow(line, FromArgb(*self.color), 0, self.arrow_size)
+            end = add_vectors(start, load)
+            line = Line(Point3d(*start), Point3d(*end))
+            lines.append(line)
+        if lines:
+            e.Display.DrawArrows(lines, color)
 
 
 class ResidualConduit(BaseConduit):
@@ -143,17 +159,23 @@ class ResidualConduit(BaseConduit):
         self.diagram = diagram
         self.color = color
         self.scale = scale
-        self.tol2 = tol**2
-        self.arrow_size = 0.1
+        self.tol = tol
 
     def PostDrawObjects(self, e):
-        for vertex in self.diagram.vertices_where(is_anchor=False):
-            r = self.diagram.vertex_attributes(vertex, ["_rx", "_ry", "_rz"])
-            r = scale_vector(r, self.scale)
-            if length_vector_sqrd(r) < self.tol**2:
+        color = FromArgb(*self.color)
+        scale = self.scale
+        tol2 = self.tol**2
+        mesh = self.diagram
+        lines = []
+        for vertex in mesh.vertices_where(is_anchor=False):
+            reaction = mesh.vertex_attributes(vertex, ["_rx", "_ry", "_rz"])
+            reaction = scale_vector(reaction, -scale)
+            if length_vector_sqrd(reaction) < tol2:
                 continue
 
-            ep = self.diagram.vertex_coordinates(vertex)
-            sp = add_vectors(ep, r)
-            line = Line(Point3d(*sp), Point3d(*ep))
-            e.Display.DrawArrow(line, FromArgb(*self.color), 0, self.arrow_size)
+            end = mesh.vertex_attributes(vertex, "xyz")
+            start = subtract_vectors(end, reaction)
+            line = Line(Point3d(*end), Point3d(*start))
+            lines.append(line)
+        if lines:
+            e.Display.DrawArrows(lines, color)
