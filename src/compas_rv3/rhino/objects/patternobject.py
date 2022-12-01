@@ -24,8 +24,10 @@ class RhinoPatternObject(RhinoMeshObject, PatternObject):
 
     def select_edge_lines(self, edges):
         guids = []
-        for guid, edge in self.guid_edge.items():
-            if edge in edges:
+        for guid, (u, v) in self.guid_edge.items():
+            if (u, v) in edges:
+                guids.append(guid)
+            elif (v, u) in edges:
                 guids.append(guid)
         compas_rhino.rs.UnselectAllObjects()
         compas_rhino.rs.EnableRedraw(False)
