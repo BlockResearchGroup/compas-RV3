@@ -47,7 +47,7 @@ def RunCommand(is_interactive):
 
     if option == "ByContinuousEdges":
         edges = form.select_edges()
-        vertices = list(set(flatten([form.diagram.vertices_on_edge_loop(edge) for edge in edges])))
+        vertices = list(set(flatten([form.diagram.edge_loop_vertices(edge) for edge in edges])))
 
     elif option == "Manual":
         vertices = form.select_vertices()

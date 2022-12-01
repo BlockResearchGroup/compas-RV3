@@ -42,8 +42,10 @@ def RunCommand(is_interactive):
         vertices = force.select_vertices()
 
     if vertices:
+        force.select_vertex_points(vertices)
+
         public = [name for name in force.diagram.default_vertex_attributes if not name.startswith("_")]
-        if force.update_vertices_attributes(vertices, names=public):
+        if force.modify_vertices(vertices, names=public):
             if thrust:
                 thrust.is_valid = False
 

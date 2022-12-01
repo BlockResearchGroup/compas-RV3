@@ -72,6 +72,8 @@ def RunCommand(is_interactive):
             vertices = pattern.select_vertices()
 
         if vertices:
+            pattern.select_vertex_points(vertices)
+
             if option1 == "Select":
                 pattern.mesh.vertices_attribute("is_anchor", True, keys=vertices)
             else:

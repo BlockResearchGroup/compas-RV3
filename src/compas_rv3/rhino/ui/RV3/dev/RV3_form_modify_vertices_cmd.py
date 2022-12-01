@@ -60,8 +60,10 @@ def RunCommand(is_interactive):
         vertices = form.select_vertices()
 
     if vertices:
+        form.select_vertex_points(vertices)
+
         public = [name for name in form.diagram.default_vertex_attributes if not name.startswith("_")]
-        if form.update_vertices_attributes(vertices, names=public):
+        if form.modify_vertices(vertices, names=public):
             if thrust:
                 thrust.is_valid = False
 

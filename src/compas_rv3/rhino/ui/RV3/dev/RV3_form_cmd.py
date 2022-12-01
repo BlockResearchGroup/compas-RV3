@@ -44,9 +44,9 @@ def RunCommand(is_interactive):
     fixed = list(pattern.mesh.vertices_where(is_fixed=True))
 
     if fixed:
-        for key in fixed:
-            if form.has_vertex(key):
-                form.vertex_attribute(key, "is_anchor", True)
+        for vertex in fixed:
+            if form.has_vertex(vertex):
+                form.vertex_attribute(vertex, "is_anchor", True)
 
     thrust = form.copy(cls=ThrustDiagram)
     bbox_form = form.bounding_box_xy()

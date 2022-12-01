@@ -41,6 +41,8 @@ def RunCommand(is_interactive):
         vertices = pattern.select_vertices()
 
     if vertices:
+        pattern.select_vertex_points(vertices)
+
         public = [name for name in pattern.mesh.default_vertex_attributes if not name.startswith("_")]
         if pattern.modify_vertices(vertices, names=public):
             ui.scene.update()

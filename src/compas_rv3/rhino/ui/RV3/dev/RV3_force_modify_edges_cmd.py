@@ -46,8 +46,10 @@ def RunCommand(is_interactive):
         edges = force.select_edges()
 
     if edges:
+        force.select_edge_lines(edges)
+
         public = [name for name in force.diagram.default_edge_attributes if not name.startswith("_")]
-        if force.update_edges_attributes(edges, names=public):
+        if force.modify_edges(edges, names=public):
             if thrust:
                 thrust.is_valid = False
 

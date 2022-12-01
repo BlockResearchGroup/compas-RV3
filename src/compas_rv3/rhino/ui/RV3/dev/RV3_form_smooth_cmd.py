@@ -37,7 +37,7 @@ def RunCommand(is_interactive):
 
     if option == "True":
         fixed += list(flatten(form.diagram.vertices_on_boundaries()))
-        fixed += list(flatten([form.diagram.face_vertices(face) for face in form.diagram.faces_where({"_is_loaded": False})]))
+        fixed += list(flatten([form.diagram.face_vertices(face) for face in form.diagram.faces_where(_is_loaded=False)]))
 
     fixed = list(set(fixed))
 

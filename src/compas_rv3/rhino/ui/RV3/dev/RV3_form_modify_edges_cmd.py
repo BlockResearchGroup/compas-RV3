@@ -47,8 +47,10 @@ def RunCommand(is_interactive):
         edges = form.select_edges()
 
     if edges:
+        form.select_edge_lines(edges)
+
         public = [name for name in form.diagram.default_edge_attributes if not name.startswith("_")]
-        if form.update_edges_attributes(edges, names=public):
+        if form.modify_edges(edges, names=public):
             if thrust:
                 thrust.is_valid = False
 

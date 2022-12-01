@@ -42,8 +42,10 @@ def RunCommand(is_interactive):
     thrust_name = thrust.name
 
     if faces:
+        thrust.select_face_meshes(faces)
+
         public = [name for name in form.diagram.default_face_attributes if not name.startswith("_")]
-        if form.update_faces_attributes(faces, names=public):
+        if form.modify_faces(faces, names=public):
             thrust.diagram.data = form.diagram.data
             thrust.name = thrust_name
             thrust.is_valid = False

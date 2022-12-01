@@ -31,14 +31,14 @@ def RunCommand(is_interactive):
         return
 
     if option == "ByContinuousEdges":
-        temp = force.select_edges()
-        keys = list(set(flatten([force.diagram.vertices_on_edge_loop(key) for key in temp])))
+        edges = force.select_edges()
+        vertices = list(set(flatten([force.diagram.edge_loop_vertices(edge) for edge in edges])))
 
     elif option == "Manual":
-        keys = force.select_vertices()
+        vertices = force.select_vertices()
 
-    if keys:
-        if force.move_vertices(keys):
+    if vertices:
+        if force.move_vertices(vertices):
             if force.diagram.primal:
                 force.diagram.update_angle_deviations()
             if thrust:

@@ -41,6 +41,8 @@ def RunCommand(is_interactive):
         edges = pattern.select_edges()
 
     if edges:
+        pattern.select_edge_lines(edges)
+
         public = [name for name in pattern.mesh.default_edge_attributes if not name.startswith("_")]
         if pattern.modify_edges(edges, names=public):
             ui.scene.update()

@@ -53,8 +53,10 @@ def RunCommand(is_interactive):
     thrust_name = thrust.name
 
     if vertices:
+        thrust.select_vertex_points(vertices)
+
         public = [name for name in form.diagram.default_vertex_attributes if not name.startswith("_")]
-        if form.update_vertices_attributes(vertices, names=public):
+        if form.modify_vertices(vertices, names=public):
             thrust.diagram.data = form.diagram.data
             thrust.name = thrust_name
             thrust.is_valid = False
