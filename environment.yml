@@ -8,6 +8,6 @@ dependencies:
    - compas>=1.17.3
    - pip:
      - compas_cloud
-     - compas_ui
+     - compas_ui>=0.9.0
      - compas_tna
      - compas_rv3
