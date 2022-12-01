@@ -7,8 +7,9 @@ from compas_rhino.conduits import BaseConduit
 from compas.geometry import add_vectors
 from compas.geometry import subtract_vectors
 from compas.geometry import scale_vector
-from compas.geometry import centroid_points
-from compas.geometry import dot_vectors
+
+# from compas.geometry import centroid_points
+# from compas.geometry import dot_vectors
 from compas.geometry import length_vector_sqrd
 
 from System.Drawing.Color import FromArgb

@@ -34,7 +34,7 @@ def RunCommand(is_interactive):
     # thrust_vertices_anchor = "{}::vertices_anchor".format(thrust.settings["layer"])
     # compas_rhino.rs.HideGroup(thrust_vertices_free)
     # compas_rhino.rs.ShowGroup(thrust_vertices_anchor)
-    anchors = [guid for guid, vertex in thrust.guid_vertex.items() if thrust.diagram.vertex_attribute(vertex, 'is_anchor')]
+    anchors = [guid for guid, vertex in thrust.guid_vertex.items() if thrust.diagram.vertex_attribute(vertex, "is_anchor")]
     compas_rhino.rs.HideObjects(thrust.guid_vertex.keys())
     compas_rhino.rs.ShowObjects(anchors)
 
