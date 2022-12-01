@@ -20,4 +20,4 @@ exclude CONTRIBUTING.md
 exclude conftest.py
 exclude environment.yml
 
-global-exclude *.py[cod] __pycache__ *.dylib *.nb[ic] .DS_Store
+global-exclude *.py[cod] __pycache__ *.dylib *.nb[ic] .DS_Store *.rui

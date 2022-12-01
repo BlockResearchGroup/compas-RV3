@@ -14,7 +14,8 @@ __commandname__ = "RV3_toolbar_boundary"
 
 def RunCommand(is_interactive):
 
-    pattern = UI.scene.active_object.get_child_by_name("Pattern")
+    ui = UI()
+    pattern = ui.scene.active_object.get_child_by_name("Pattern")
     if not pattern:
         compas_rhino.display_message("No Pattern found in the active group.")
         return

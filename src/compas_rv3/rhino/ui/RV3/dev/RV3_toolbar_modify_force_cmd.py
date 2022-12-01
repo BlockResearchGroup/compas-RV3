@@ -15,7 +15,8 @@ __commandname__ = "RV3_toolbar_modify_force"
 
 def RunCommand(is_interactive):
 
-    force = UI.scene.active_object.get_child_by_name("ForceDiagram")
+    ui = UI()
+    force = ui.scene.active_object.get_child_by_name("ForceDiagram")
     if not force:
         compas_rhino.display_message("No ForceDiagram found in the active group.")
         return
