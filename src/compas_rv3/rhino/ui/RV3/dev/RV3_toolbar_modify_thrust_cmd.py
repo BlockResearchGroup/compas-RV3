@@ -16,7 +16,8 @@ __commandname__ = "RV3_toolbar_modify_thrust"
 @UI.error()
 def RunCommand(is_interactive):
 
-    thrust = UI.scene.active_object.get_child_by_name("ThrustDiagram")
+    ui = UI()
+    thrust = ui.scene.active_object.get_child_by_name("ThrustDiagram")
     if not thrust:
         compas_rhino.display_message("No ThrustDiagram found in the active group.")
         return

@@ -16,7 +16,8 @@ __commandname__ = "RV3_toolbar_modify_form"
 
 def RunCommand(is_interactive):
 
-    form = UI.scene.active_object.get_child_by_name("FormDiagram")
+    ui = UI()
+    form = ui.scene.active_object.get_child_by_name("FormDiagram")
     if not form:
         compas_rhino.display_message("No FormDiagram found in the active group.")
         return
