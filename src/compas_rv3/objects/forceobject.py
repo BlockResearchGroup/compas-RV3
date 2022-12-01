@@ -25,3 +25,7 @@ class ForceObject(DiagramObject):
             "color.tension": ColorValue(Color.red()),
         }
     )
+
+    @property
+    def vertex_xyz(self):
+        return {vertex: self.diagram.vertex_attributes(vertex, "xy") + [0.0] for vertex in self.diagram.vertices()}

@@ -24,6 +24,9 @@ class FormObject(DiagramObject):
             "color.vertices:is_anchor": ColorValue(Color.white()),
             "color.edges": ColorValue(Color.green().darkened(50)),
             "color.tension": ColorValue(Color.red()),
-            # 'input_guids': []
         }
     )
+
+    @property
+    def vertex_xyz(self):
+        return {vertex: self.diagram.vertex_attributes(vertex, "xy") + [0.0] for vertex in self.diagram.vertices()}
