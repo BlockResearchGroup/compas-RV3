@@ -43,7 +43,9 @@ def RunCommand(is_interactive):
     force.transform(Translation.from_vector([dx, dy, 0]))
     force.update_angle_deviations()
 
-    ui.scene.active_object.add(force, name="ForceDiagram")
+    group = ui.scene.active_object
+    group.add(force, name="ForceDiagram")
+    ui.scene.active_object = group
     ui.scene.update()
     ui.record()
 
