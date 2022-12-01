@@ -9,6 +9,6 @@ dependencies:
    - compas_cgal
    - pip:
      - compas_cloud
-     - compas_ui>=0.9.0
+     - compas_ui>=0.9.1
      - compas_tna
      - compas_rv3
