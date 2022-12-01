@@ -26,14 +26,17 @@ def RunCommand(is_interactive):
         return
 
     # hide the form vertices
-    form_vertices = "{}::vertices".format(form.settings["layer"])
-    compas_rhino.rs.HideGroup(form_vertices)
+    # form_vertices = "{}::vertices".format(form.settings["layer"])
+    # compas_rhino.rs.HideGroup(form_vertices)
+    compas_rhino.rs.HideObjects(form.guid_vertex.keys())
 
     # show the thrust vertices
-    thrust_vertices_free = "{}::vertices_free".format(thrust.settings["layer"])
-    thrust_vertices_anchor = "{}::vertices_anchor".format(thrust.settings["layer"])
-    compas_rhino.rs.ShowGroup(thrust_vertices_free)
-    compas_rhino.rs.ShowGroup(thrust_vertices_anchor)
+    # thrust_vertices_free = "{}::vertices_free".format(thrust.settings["layer"])
+    # thrust_vertices_anchor = "{}::vertices_anchor".format(thrust.settings["layer"])
+    # compas_rhino.rs.ShowGroup(thrust_vertices_free)
+    # compas_rhino.rs.ShowGroup(thrust_vertices_anchor)
+    compas_rhino.rs.ShowObjects(thrust.guid_vertex.keys())
+
     compas_rhino.rs.Redraw()
 
     # selection options
