@@ -42,7 +42,7 @@ def RunCommand(is_interactive):
 
     if vertices:
         public = [name for name in pattern.mesh.default_vertex_attributes if not name.startswith("_")]
-        if pattern.update_vertices_attributes(vertices, names=public):
+        if pattern.modify_vertices(vertices, names=public):
             ui.scene.update()
             ui.record()
 
