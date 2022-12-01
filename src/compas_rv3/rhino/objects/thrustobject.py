@@ -227,7 +227,7 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             color = {edge: self.settings["color.pipes"] for edge in edges}
 
             # color analysis
-            if self.scene and self.scene.settings["RV2"]["show.forces"]:
+            if ui.registry["RV3"]["show.forces"]:
                 if self.diagram.dual:
                     _edges = list(self.diagram.dual.edges())
                     lengths = [self.diagram.dual.edge_length(*edge) for edge in _edges]
@@ -242,40 +242,36 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             guids = self.artist.draw_pipes(edges, color, scale, tol)
             self.guids += guids
 
-    # def select_vertices_free(self):
-    #     """Manually select free vertices in the Rhino model view.
+    def select_vertices_free(self):
+        """
+        Manually select free vertices in the Rhino model view.
 
-    #     Returns
-    #     -------
-    #     list
-    #         The keys of the selected vertices.
+        Returns
+        -------
+        list[int]
+            The identifiers of the selected vertices.
 
-    #     Examples
-    #     --------
-    #     >>>
-    #     """
-    #     guids = compas_rhino.select_points(message="Select free vertices.")
-    #     if guids:
-    #         keys = [self.guid_free[guid] for guid in guids if guid in self.guid_free]
-    #     else:
-    #         keys = []
-    #     return keys
+        """
+        free = []
+        guids = compas_rhino.select_points(message="Select free vertices.")
+        if guids:
+            vertices = [self.guid_vertex[guid] for guid in guids if guid in self.guid_vertex]
+            free = [vertex for vertex in vertices if not self.diagram.vertex_attribute(vertex, "is_anchor")]
+        return free
 
-    # def select_vertices_anchor(self):
-    #     """Manually select anchor vertices in the Rhino model view.
+    def select_vertices_anchor(self):
+        """
+        Manually select anchor vertices in the Rhino model view.
 
-    #     Returns
-    #     -------
-    #     list
-    #         The keys of the selected vertices.
+        Returns
+        -------
+        list[int]
+            The identifiers of the selected vertices.
 
-    #     Examples
-    #     --------
-    #     >>>
-    #     """
-    #     guids = compas_rhino.select_points(message="Select anchor vertices.")
-    #     if guids:
-    #         keys = [self.guid_anchor[guid] for guid in guids if guid in self.guid_anchor]
-    #     else:
-    #         keys = []
-    #     return keys
+        """
+        anchors = []
+        guids = compas_rhino.select_points(message="Select anchor vertices.")
+        if guids:
+            vertices = [self.guid_vertex[guid] for guid in guids if guid in self.guid_vertex]
+            anchors = [vertex for vertex in vertices if self.diagram.vertex_attribute(vertex, "is_anchor")]
+        return anchors
