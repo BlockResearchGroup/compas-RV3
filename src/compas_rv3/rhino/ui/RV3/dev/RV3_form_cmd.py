@@ -54,9 +54,13 @@ def RunCommand(is_interactive):
     zmax = 0.25 * diagonal
 
     ui.scene.settings["tna.vertical.zmax"] = round(zmax, 1)
-    ui.scene.active_object.clear()
-    ui.scene.active_object.add(form, name="FormDiagram")
-    ui.scene.active_object.add(thrust, name="ThrustDiagram")
+
+    group = ui.scene.active_object
+    group.clear()
+    group.add(form, name="FormDiagram")
+    group.add(thrust, name="ThrustDiagram")
+    ui.scene.active_object = group
+
     ui.scene.update()
     ui.record()
 
