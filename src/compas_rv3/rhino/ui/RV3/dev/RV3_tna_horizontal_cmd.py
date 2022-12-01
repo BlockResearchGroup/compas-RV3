@@ -115,7 +115,7 @@ def RunCommand(is_interactive):
     tol = ui.registry["RV3"]["tol.angles"]
 
     if max_angle < tol:
-        compas_rhino.display_message("Horizontal equilibrium found!\nMaximum angle deviation: {}".format(max_angle))
+        print("Horizontal equilibrium found!\nMaximum angle deviation: {}".format(max_angle))
     else:
         compas_rhino.display_message("Horizontal equilibrium NOT found! Consider running more iterations.\nMaximum angle deviation: {}".format(max_angle))
 

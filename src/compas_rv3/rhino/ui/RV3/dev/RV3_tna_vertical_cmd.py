@@ -70,7 +70,7 @@ def RunCommand(is_interactive):
 
     thrust.is_valid = True
 
-    compas_rhino.display_message("Vertical equilibrium found!\nThrustDiagram object successfully created with target height of {}.".format(zmax))
+    print("Vertical equilibrium found!\nThrustDiagram object successfully created with target height of {}.".format(zmax))
 
     ui.scene.update()
     ui.record()
