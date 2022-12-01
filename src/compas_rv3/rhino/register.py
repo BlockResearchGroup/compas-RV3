@@ -34,9 +34,9 @@ def register(ui):
     ui.registry["RV3"] = SETTINGS
 
 
-# @plugin(category="ui")
-# def pre_undo(ui):
-#     pass
+@plugin(category="ui")
+def pre_undo(ui):
+    pass
 
 
 # @plugin(category="ui")
@@ -76,9 +76,9 @@ def register(ui):
 #                 force.diagram.dual = form.diagram
 
 
-# @plugin(category="ui")
-# def pre_redo(ui):
-#     pass
+@plugin(category="ui")
+def pre_redo(ui):
+    pass
 
 
 # @plugin(category="ui")
