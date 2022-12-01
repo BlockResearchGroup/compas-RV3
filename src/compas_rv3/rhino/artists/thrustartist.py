@@ -136,7 +136,7 @@ class RhinoThrustArtist(RhinoDiagramArtist, ThrustArtist):
                 {
                     "start": a,
                     "end": b,
-                    "color": color,
+                    "color": color.rgb255,
                     "arrow": "start",
                 }
             )
@@ -176,7 +176,7 @@ class RhinoThrustArtist(RhinoDiagramArtist, ThrustArtist):
                 {
                     "start": a,
                     "end": b,
-                    "color": color,
+                    "color": color.rgb255,
                     "arrow": "start",
                 }
             )
@@ -224,7 +224,7 @@ class RhinoThrustArtist(RhinoDiagramArtist, ThrustArtist):
                     "start": start,
                     "end": end,
                     "radius": radius,
-                    "color": pipe_color,
+                    "color": pipe_color.rgb255,
                 }
             )
         return compas_rhino.draw_cylinders(cylinders, layer=self.layer, clear=False, redraw=False)
