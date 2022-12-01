@@ -94,25 +94,23 @@ class ThrustArtist(DiagramArtist):
         """
         raise NotImplementedError
 
-    # def draw_pipes(self, edges, color, scale, tol):
-    #     vertex_xyz = self.vertex_xyz
-    #     cylinders = []
-    #     for edge in edges:
-    #         u, v = edge
-    #         start = vertex_xyz[u]
-    #         end = vertex_xyz[v]
-    #         force = self.mesh.edge_attribute(edge, "_f")
-    #         force = scale * force
-    #         if force < tol:
-    #             continue
-    #         radius = sqrt(force / pi)
-    #         if isinstance(color, dict):
-    #             pipe_color = color[edge]
-    #         else:
-    #             pipe_color = color
-    #         cylinders.append(
-    #             {"start": start, "end": end, "radius": radius, "color": pipe_color}
-    #         )
-    #     return compas_rhino.draw_cylinders(
-    #         cylinders, layer=self.layer, clear=False, redraw=False
-    #     )
+    def draw_pipes(self, color, scale, tol=1e-3):
+        """Draw pipes representing the axial forces in the edges of the diagram.
+
+        Parameters
+        ----------
+        color : :class:`compas.colors.Color`
+            The color of the pipes.
+        scale : float
+            A scaling factor for the pipe radius.
+        tol : float, optional
+            A threshold for the size of the radius after applying the scaling factor.
+
+        Returns
+        -------
+        list[guid]
+            A list of guids corresponding to the pipe objects representing
+            the axial forces in Rhino.
+
+        """
+        raise NotImplementedError

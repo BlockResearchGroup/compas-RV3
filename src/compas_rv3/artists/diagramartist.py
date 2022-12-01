@@ -22,3 +22,13 @@ class DiagramArtist(MeshArtist):
     @diagram.setter
     def diagram(self, diagram):
         self.mesh = diagram
+
+    @property
+    def vertex_xyz(self):
+        if not self._vertex_xyz:
+            self._vertex_xyz = {vertex: self.diagram.vertex_attributes(vertex, "xy") + [0.0] for vertex in self.diagram.vertices()}
+        return self._vertex_xyz
+
+    @vertex_xyz.setter
+    def vertex_xyz(self, vertex_xyz):
+        self._vertex_xyz = vertex_xyz
