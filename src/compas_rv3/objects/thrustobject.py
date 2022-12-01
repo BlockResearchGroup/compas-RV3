@@ -2,6 +2,10 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+from compas.geometry import Point
+from compas.geometry import Scale
+from compas.geometry import Translation
+from compas.geometry import Rotation
 
 from compas_ui.values import Settings
 from compas_ui.values import StrValue
@@ -38,7 +42,7 @@ class ThrustObject(DiagramObject):
             "color.reactions": ColorValue(Color.green().darkened(30)),
             "color.faces": ColorValue(Color.purple()),
             "color.pipes": ColorValue(Color.blue()),
-            "color.invalid": ColorValue(Color.red().lightened(40)),
+            "color.invalid": ColorValue(Color.grey().lightened(70)),
             "scale.selfweight": FloatValue(0.1),
             "scale.externalforces": FloatValue(0.1),
             "scale.residuals": FloatValue(1.0),
@@ -53,3 +57,23 @@ class ThrustObject(DiagramObject):
     def __init__(self, *args, **kwargs):
         super(ThrustObject, self).__init__(*args, **kwargs)
         self.is_valid = False
+
+    @property
+    def vertex_xyz(self):
+        origin = Point(0, 0, 0)
+        if self.anchor is not None:
+            xyz = self.mesh.vertex_attributes(self.anchor, "xyz")
+            point = Point(*xyz)
+            T1 = Translation.from_vector(origin - point)
+            S = Scale.from_factors([self.scale] * 3)
+            R = Rotation.from_euler_angles(self.rotation)
+            T2 = Translation.from_vector(self.location)
+            X = T2 * R * S * T1
+        else:
+            S = Scale.from_factors([self.scale] * 3)
+            R = Rotation.from_euler_angles(self.rotation)
+            T = Translation.from_vector(self.location)
+            X = T * R * S
+        mesh = self.mesh.transformed(X)
+        vertex_xyz = {vertex: mesh.vertex_attributes(vertex, "xyz") for vertex in mesh.vertices()}
+        return vertex_xyz
