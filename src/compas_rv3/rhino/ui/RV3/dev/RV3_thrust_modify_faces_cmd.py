@@ -4,7 +4,6 @@ from __future__ import division
 
 import compas_rhino
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_thrust_modify_faces"

@@ -24,7 +24,6 @@ def RunCommand(is_interactive):
         compas_rhino.display_message("No ThrustDiagram found in the active group.")
         return
 
-
     # hide the form vertices
     form_vertices = "{}::vertices".format(form.settings["layer"])
     compas_rhino.rs.HideGroup(form_vertices)

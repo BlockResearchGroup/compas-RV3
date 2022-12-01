@@ -143,7 +143,7 @@ def mesh_unify_cycles(mesh, root=None):
 
 def RunCommand(is_interactive):
 
-    scene = get_scene()
+    scene = get_scene()  # noqa F821
     if not scene:
         return
 
