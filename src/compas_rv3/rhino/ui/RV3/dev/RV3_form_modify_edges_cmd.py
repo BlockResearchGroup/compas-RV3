@@ -6,7 +6,6 @@ from compas.utilities import flatten
 
 import compas_rhino
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_form_modify_edges"
@@ -17,8 +16,15 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    form = get_object_by_name("FormDiagram")
-    thrust = get_object_by_name("ThrustDiagram")
+    form = ui.scene.active_object.get_child_by_name("FormDiagram")
+    if not form:
+        compas_rhino.display_message("No FormDiagram found in the active group.")
+        return
+
+    thrust = ui.scene.active_object.get_child_by_name("ThrustDiagram")
+    if not thrust:
+        compas_rhino.display_message("No ThrustDiagram found in the active group.")
+        return
 
     options = ["All", "Continuous", "Parallel", "Manual"]
     option = compas_rhino.rs.GetString("Selection Type.", strings=options)

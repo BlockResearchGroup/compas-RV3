@@ -6,7 +6,6 @@ from compas.utilities import flatten
 
 import compas_rhino
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_boundary_supports"
@@ -17,7 +16,10 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    pattern = get_object_by_name("Pattern")
+    pattern = ui.scene.active_object.get_child_by_name("Pattern")
+    if not pattern:
+        compas_rhino.display_message("No pattern found in the active group.")
+        return
 
     # mark all fixed vertices as anchors
     # mark all leaves as anchors

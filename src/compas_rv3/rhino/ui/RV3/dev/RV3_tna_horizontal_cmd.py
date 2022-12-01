@@ -7,7 +7,6 @@ from compas.geometry import Translation
 from compas_tna.equilibrium import horizontal_nodal
 from compas_rv3.rhino import HorizontalConduit
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 __commandname__ = "RV3_tna_horizontal"
 
@@ -24,9 +23,20 @@ def RunCommand(is_interactive):
         conduit.lines = [[[xy[i][1], -xy[i][0]], [xy[j][1], -xy[j][0]]] for i, j in edges]
         conduit.redraw()
 
-    form = get_object_by_name("FormDiagram")
-    force = get_object_by_name("ForceDiagram")
-    thrust = get_object_by_name("ThrustDiagram")
+    form = ui.scene.active_object.get_child_by_name("FormDiagram")
+    if not form:
+        compas_rhino.display_message("No FormDiagram found in the active group.")
+        return
+
+    force = ui.scene.active_object.get_child_by_name("ForceDiagram")
+    if not force:
+        compas_rhino.display_message("No ForceDiagram found in the active group.")
+        return
+
+    thrust = ui.scene.active_object.get_child_by_name("ThrustDiagram")
+    if not thrust:
+        compas_rhino.display_message("No ThrustDiagram found in the active group.")
+        return
 
     kmax = ui.scene.settings["tna.horizontal.kmax"]
     alpha = ui.scene.settings["tna.horizontal.alpha"]

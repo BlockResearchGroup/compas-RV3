@@ -6,7 +6,6 @@ import compas_rhino
 from compas.geometry import subtract_vectors
 from compas.geometry import length_vector
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_tna_vertical"
@@ -19,9 +18,20 @@ def RunCommand(is_interactive):
 
     vertical = ui.proxy.function("compas_tna.equilibrium.vertical_from_zmax_proxy")
 
-    form = get_object_by_name("FormDiagram")
-    force = get_object_by_name("ForceDiagram")
-    thrust = get_object_by_name("ThrustDiagram")
+    form = ui.scene.active_object.get_child_by_name("FormDiagram")
+    if not form:
+        compas_rhino.display_message("No FormDiagram found in the active group.")
+        return
+
+    force = ui.scene.active_object.get_child_by_name("ForceDiagram")
+    if not force:
+        compas_rhino.display_message("No ForceDiagram found in the active group.")
+        return
+
+    thrust = ui.scene.active_object.get_child_by_name("ThrustDiagram")
+    if not thrust:
+        compas_rhino.display_message("No ThrustDiagram found in the active group.")
+        return
 
     bbox = form.diagram.bounding_box_xy()
     diagonal = length_vector(subtract_vectors(bbox[2], bbox[0]))

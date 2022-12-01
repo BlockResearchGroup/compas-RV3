@@ -4,7 +4,6 @@ from __future__ import division
 
 import compas_rhino
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 import RV3_form_modify_vertices_cmd
 import RV3_form_modify_edges_cmd
@@ -15,10 +14,12 @@ import RV3_form_relax_cmd
 __commandname__ = "RV3_toolbar_modify_form"
 
 
-@UI.error()
 def RunCommand(is_interactive):
 
-    get_object_by_name("FormDiagram")
+    form = UI.scene.active_object.get_child_by_name("FormDiagram")
+    if not form:
+        compas_rhino.display_message("No FormDiagram found in the active group.")
+        return
 
     options = ["VerticesAttributes", "EdgesAttributes", "MoveVertices", "Relax"]
     option = compas_rhino.rs.GetString("Modify form diagram:", strings=options)

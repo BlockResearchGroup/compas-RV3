@@ -4,7 +4,6 @@ from __future__ import division
 
 import compas_rhino
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 import RV3_force_modify_vertices_cmd
 import RV3_force_modify_edges_cmd
@@ -14,10 +13,12 @@ import RV3_force_move_vertices_cmd
 __commandname__ = "RV3_toolbar_modify_force"
 
 
-@UI.error()
 def RunCommand(is_interactive):
 
-    get_object_by_name("ForceDiagram")
+    force = UI.scene.active_object.get_child_by_name("ForceDiagram")
+    if not force:
+        compas_rhino.display_message("No ForceDiagram found in the active group.")
+        return
 
     options = ["VerticesAttributes", "EdgesAttributes", "MoveVertices"]
     option = compas_rhino.rs.GetString("Modify force diagram:", strings=options)

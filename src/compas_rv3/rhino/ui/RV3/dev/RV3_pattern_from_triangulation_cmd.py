@@ -4,6 +4,7 @@ from __future__ import division
 
 import compas_rhino
 from compas_ui.ui import UI
+from compas_ui.objects import Group
 
 from compas.utilities import geometric_key
 from compas_rhino.geometry import RhinoCurve
@@ -101,7 +102,9 @@ def RunCommand(is_interactive):
     guids = boundary_guids + hole_guids + segments_guids
     compas_rhino.rs.HideObject(guids)
 
-    ui.scene.add(pattern, name="Pattern")
+    group = ui.scene.add(Group(), name="RV3")
+    group.add(pattern, name="Pattern")
+    ui.scene.active_object = group
     ui.scene.update()
     ui.record()
 
