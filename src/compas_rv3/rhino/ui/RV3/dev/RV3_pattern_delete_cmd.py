@@ -2,8 +2,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import compas_rhino
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_pattern_delete"
@@ -14,7 +14,10 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    pattern = get_object_by_name("Pattern")
+    pattern = ui.scene.active_object.get_child_by_name("Pattern")
+    if not pattern:
+        compas_rhino.display_message("No Pattern found in the active group.")
+        return
 
     vertices = pattern.select_vertices()
     for vertex in vertices:

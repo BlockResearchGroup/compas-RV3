@@ -4,7 +4,6 @@ from __future__ import division
 
 import compas_rhino
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 import RV3_thrust_modify_vertices_cmd
 import RV3_thrust_move_supports_cmd
@@ -17,7 +16,10 @@ __commandname__ = "RV3_toolbar_modify_thrust"
 @UI.error()
 def RunCommand(is_interactive):
 
-    get_object_by_name("ThrustDiagram")
+    thrust = UI.scene.active_object.get_child_by_name("ThrustDiagram")
+    if not thrust:
+        compas_rhino.display_message("No ThrustDiagram found in the active group.")
+        return
 
     options = ["VerticesAttributes", "FacesAttributes", "MoveSupports"]
     option = compas_rhino.rs.GetString("Modify thrust diagram:", strings=options)

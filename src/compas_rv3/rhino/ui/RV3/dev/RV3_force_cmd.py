@@ -2,10 +2,10 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import compas_rhino
 from compas.geometry import Translation
 from compas_rv3.datastructures import ForceDiagram
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_force"
@@ -16,11 +16,15 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    form = get_object_by_name("FormDiagram")
+    form = ui.scene.active_object.get_child_by_name("FormDiagram")
+    if not form:
+        compas_rhino.display_message("No FormDiagram found in the active group.")
+        return
 
-    objects = ui.scene.get("ForceDiagram")
-    if objects:
-        raise RuntimeError("Recreating the force diagram does not work")
+    force = ui.scene.active_object.get_child_by_name("ForceDiagram")
+    if force:
+        compas_rhino.display_message("Recreating the force diagram does not work.")
+        return
 
     force = ForceDiagram.from_formdiagram(form.diagram)
     force.default_edge_attributes.update({"lmin": 0.1})
@@ -39,8 +43,7 @@ def RunCommand(is_interactive):
     force.transform(Translation.from_vector([dx, dy, 0]))
     force.update_angle_deviations()
 
-    ui.scene.add(force, name="ForceDiagram")
-
+    ui.scene.active_object.add(force, name="ForceDiagram")
     ui.scene.update()
     ui.record()
 

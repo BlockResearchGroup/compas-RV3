@@ -15,7 +15,6 @@ from compas.geometry import midpoint_point_point_xy
 from compas.utilities import pairwise
 
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_boundary_boundaries"
@@ -102,7 +101,10 @@ def RunCommand(is_interactive):
 
     relax = ui.proxy.function("compas.numerical.fd_numpy")
 
-    pattern = get_object_by_name("Pattern")
+    pattern = ui.scene.active_object.get_child_by_name("Pattern")
+    if not pattern:
+        compas_rhino.display_message("No pattern found in the active group.")
+        return
 
     # split the exterior boundary
     openings = split_boundary(pattern.mesh)

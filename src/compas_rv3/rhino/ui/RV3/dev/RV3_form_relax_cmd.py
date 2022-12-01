@@ -2,9 +2,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import compas_rhino
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
-
 
 __commandname__ = "RV3_form_relax"
 
@@ -14,8 +13,15 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    form = get_object_by_name("FormDiagram")
-    thrust = get_object_by_name("ThrustDiagram")
+    form = ui.scene.active_object.get_child_by_name("FormDiagram")
+    if not form:
+        compas_rhino.display_message("No FormDiagram found in the active group.")
+        return
+
+    thrust = ui.scene.active_object.get_child_by_name("ThrustDiagram")
+    if not thrust:
+        compas_rhino.display_message("No ThrustDiagram found in the active group.")
+        return
 
     anchors = list(form.diagram.vertices_where(is_anchor=True))
     fixed = list(form.diagram.vertices_where(is_fixed=True))

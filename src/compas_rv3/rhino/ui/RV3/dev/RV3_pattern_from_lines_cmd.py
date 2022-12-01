@@ -4,6 +4,7 @@ from __future__ import division
 
 import compas_rhino
 from compas_ui.ui import UI
+from compas_ui.objects import Group
 from compas_rv3.datastructures import Pattern
 
 
@@ -28,7 +29,9 @@ def RunCommand(is_interactive):
 
     compas_rhino.rs.HideObjects(guids)
 
-    ui.scene.add(pattern, name="Pattern")
+    group = ui.scene.add(Group(), name="RV3")
+    group.add(pattern, name="Pattern")
+    ui.scene.active_object = group
     ui.scene.update()
     ui.record()
 

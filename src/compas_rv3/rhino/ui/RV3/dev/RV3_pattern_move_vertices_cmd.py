@@ -5,7 +5,6 @@ from __future__ import division
 import compas_rhino
 from compas.utilities import flatten
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_pattern_move_vertices"
@@ -16,7 +15,10 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    pattern = get_object_by_name("Pattern")
+    pattern = ui.scene.active_object.get_child_by_name("Pattern")
+    if not pattern:
+        compas_rhino.display_message("No Pattern found in the active group.")
+        return
 
     options = ["ByContinuousEdges", "Manual"]
     option = compas_rhino.rs.GetString("Selection Type.", strings=options)

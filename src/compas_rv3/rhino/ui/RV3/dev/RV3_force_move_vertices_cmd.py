@@ -5,7 +5,6 @@ from __future__ import division
 import compas_rhino
 from compas.utilities import flatten
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_force_move_vertices"
@@ -16,8 +15,15 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    force = get_object_by_name("ForceDiagram")
-    thrust = get_object_by_name("ThrustDiagram")
+    force = ui.scene.active_object.get_child_by_name("ForceDiagram")
+    if not force:
+        compas_rhino.display_message("No ForceDiagram found in the active group.")
+        return
+
+    thrust = ui.scene.active_object.get_child_by_name("ThrustDiagram")
+    if not thrust:
+        compas_rhino.display_message("No ThrustDiagram found in the active group.")
+        return
 
     options = ["ByContinuousEdges", "Manual"]
     option = compas_rhino.rs.GetString("Selection Type.", strings=options)

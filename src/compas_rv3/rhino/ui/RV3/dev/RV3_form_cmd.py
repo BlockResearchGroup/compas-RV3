@@ -13,7 +13,6 @@ from compas_rv3.datastructures import ThrustDiagram
 from compas_rv3.datastructures import FormDiagram
 
 from compas_ui.ui import UI
-from compas_rv3.rhino.helpers import get_object_by_name
 
 
 __commandname__ = "RV3_form"
@@ -24,7 +23,10 @@ def RunCommand(is_interactive):
 
     ui = UI()
 
-    pattern = get_object_by_name("Pattern")
+    pattern = ui.scene.active_object.get_child_by_name("Pattern")
+    if not pattern:
+        compas_rhino.display_message("No Pattern found in the active group.")
+        return
 
     if not list(pattern.mesh.vertices_where(is_anchor=True)):
         compas_rhino.display_message("Pattern has no anchor vertices! Please define anchor (support) vertices.")
@@ -52,9 +54,9 @@ def RunCommand(is_interactive):
     zmax = 0.25 * diagonal
 
     ui.scene.settings["tna.vertical.zmax"] = round(zmax, 1)
-    ui.scene.clear()
-    ui.scene.add(form, name="FormDiagram")
-    ui.scene.add(thrust, name="ThrustDiagram")
+    ui.scene.active_object.clear()
+    ui.scene.active_object.add(form, name="FormDiagram")
+    ui.scene.active_object.add(thrust, name="ThrustDiagram")
     ui.scene.update()
     ui.record()
 
