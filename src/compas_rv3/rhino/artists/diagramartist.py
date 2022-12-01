@@ -7,11 +7,4 @@ from compas_ui.rhino.artists import MeshArtist as RhinoMeshArtist
 
 
 class RhinoDiagramArtist(DiagramArtist, RhinoMeshArtist):
-    """Rhino artist for diagrams in RhinoVAULT (3).
-
-    Attributes
-    ----------
-    diagram : :class:`compas_rv3.datastructures.Diagram`
-        The diagram associated with the artist.
-
-    """
+    """Rhino artist for diagrams in RhinoVAULT (3)."""
