@@ -59,19 +59,9 @@
             "icon": 11
         },
         {
-            "name": "RV3_pattern_from_skeleton",
-            "menu_text": "From Skeleton",
-            "icon": 12
-        },
-        {
             "name": "RV3_pattern_from_triangulation",
             "menu_text": "From Triangulation",
             "icon": 13
-        },
-        {
-            "name": "RV3_pattern_from_features",
-            "menu_text": "From Features",
-            "icon": 14
         },
         {
             "name": "RV3_pattern_relax",
@@ -254,13 +244,7 @@
                             "command": "RV3_pattern_from_surfaces"
                         },
                         {
-                            "command": "RV3_pattern_from_skeleton"
-                        },
-                        {
                             "command": "RV3_pattern_from_triangulation"
-                        },
-                        {
-                            "command": "RV3_pattern_from_features"
                         }
                     ]
                 },
@@ -448,9 +432,6 @@
                 },
                 {
                     "left": "RV3_toolbar_modify_thrust"
-                },
-                {
-                    "type": "separator"
                 }
             ]
         }
