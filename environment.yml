@@ -10,5 +10,5 @@ dependencies:
    - pip:
      - compas_cloud
      - compas_ui>=0.9.1
-     - compas_tna
-     - compas_rv3
+     - compas_tna>=0.2.0
+     - compas_rv3>=0.2.2
