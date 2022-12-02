@@ -1,0 +1,14 @@
+name: csd1
+channels:
+    - conda-forge
+
+dependencies:
+   - python=3.9
+   - pip
+   - compas>=1.17.3
+   - compas_cgal
+   - pip:
+     - compas_cloud
+     - compas_ui>=0.9.1
+     - compas_tna>=0.2.0
+     - compas_rv3>=0.2.4
