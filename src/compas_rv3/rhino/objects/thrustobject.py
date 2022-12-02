@@ -116,7 +116,7 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
 
         layer = self.settings["layer"]
         self.artist.layer = layer
-        self.artist.clear_layer()
+        # self.artist.clear_layer()
         self.artist.vertex_xyz = self.vertex_xyz
 
         group_free = "{}::vertices_free".format(layer)
