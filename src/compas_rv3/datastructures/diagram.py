@@ -22,7 +22,7 @@ class Diagram(Mesh):
         while True:
             if current == uv[1]:
                 break
-            if self.vertex_attribute(current, 'is_fixed'):
+            if self.vertex_attribute(current, "is_fixed"):
                 break
             nbrs = self.vertex_neighbors(current, ordered=True)
             if len(nbrs) != 4:
@@ -39,7 +39,7 @@ class Diagram(Mesh):
 
         previous, current = uv
         while True:
-            if self.vertex_attribute(current, 'is_fixed'):
+            if self.vertex_attribute(current, "is_fixed"):
                 break
             nbrs = self.vertex_neighbors(current, ordered=True)
             if len(nbrs) != 4:
@@ -59,7 +59,7 @@ class Diagram(Mesh):
         while True:
             if current == uv[1]:
                 break
-            if self.vertex_attribute(current, 'is_fixed'):
+            if self.vertex_attribute(current, "is_fixed"):
                 break
             nbrs = self.vertex_neighbors(current)
             if len(nbrs) == 2:
@@ -83,7 +83,7 @@ class Diagram(Mesh):
 
         previous, current = uv
         while True:
-            if self.vertex_attribute(current, 'is_fixed'):
+            if self.vertex_attribute(current, "is_fixed"):
                 break
             nbrs = self.vertex_neighbors(current)
             if len(nbrs) == 2:

@@ -55,7 +55,7 @@ def RunCommand(is_interactive):
         vertices = form.select_vertices()
 
     if vertices:
-        if form.move_vertices_direction(vertices, 'xy'):
+        if form.move_vertices_direction(vertices, "xy"):
             if form.diagram.dual:
                 form.diagram.dual.update_angle_deviations()
             if thrust:

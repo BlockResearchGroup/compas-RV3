@@ -51,7 +51,7 @@ class RhinoFormObject(RhinoDiagramObject, FormObject):
 
         compas_rhino.rs.AddObjectsToGroup(guids, group_vertices)
 
-        if self.settings['show.vertices']:
+        if self.settings["show.vertices"]:
             compas_rhino.rs.ShowGroup(group_vertices)
         else:
             compas_rhino.rs.HideGroup(group_vertices)
@@ -83,7 +83,7 @@ class RhinoFormObject(RhinoDiagramObject, FormObject):
 
         compas_rhino.rs.AddObjectsToGroup(guids, group_edges)
 
-        if self.settings['show.edges']:
+        if self.settings["show.edges"]:
             compas_rhino.rs.ShowGroup(group_edges)
         else:
             compas_rhino.rs.HideGroup(group_edges)

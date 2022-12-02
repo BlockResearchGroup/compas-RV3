@@ -44,7 +44,7 @@ def RunCommand(is_interactive):
     vertices = thrust.select_vertices_anchor()
 
     if vertices:
-        if thrust.move_vertices_direction(vertices, 'z'):
+        if thrust.move_vertices_direction(vertices, "z"):
             for vertex in vertices:
                 # update the corresponding form diagram vertices
                 z = thrust.diagram.vertex_attribute(vertex, "z")

@@ -211,7 +211,7 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
                             "vertexcolors": [vertex_colors[vertex] for vertex in self.diagram.face_vertices(face)],
                         }
                     )
-                guids = compas_rhino.draw_faces(facets, layer=self.settings['layer'], clear=False, redraw=False)
+                guids = compas_rhino.draw_faces(facets, layer=self.settings["layer"], clear=False, redraw=False)
 
             else:
                 guids = self.artist.draw_faces(faces, color)
