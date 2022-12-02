@@ -10,7 +10,47 @@ from compas_ui.rhino.objects import RhinoMeshObject
 class RhinoDiagramObject(RhinoMeshObject, DiagramObject):
     """
     Rhino scene object for diagrams in RV3.
+
+    Attributes
+    ----------
+    group_vertices : str
+        The name of the group containing the vertices.
+    group_edges : str
+        The name of the group containing the edges.
+
     """
+
+    @property
+    def group_vertices(self):
+        return "{}::vertices".format(self.settings["layer"])
+
+    @property
+    def group_edges(self):
+        return "{}::edges".format(self.settings["layer"])
+
+    def add_group_for_vertices(self):
+        """
+        Add the group for the diagram vertices to the Rhino model if it doesn't exist yet.
+
+        Returns
+        -------
+        None
+
+        """
+        if not compas_rhino.rs.IsGroup(self.group_vertices):
+            compas_rhino.rs.AddGroup(self.group_vertices)
+
+    def add_group_for_edges(self):
+        """
+        Add the group for the diagram edges to the Rhino model if it doesn't exist yet.
+
+        Returns
+        -------
+        None
+
+        """
+        if not compas_rhino.rs.IsGroup(self.group_edges):
+            compas_rhino.rs.AddGroup(self.group_edges)
 
     def select_vertex_points(self, vertices):
         """

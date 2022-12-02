@@ -5,6 +5,7 @@ from __future__ import division
 import compas_rhino
 from compas.colors import Color
 from compas.geometry import centroid_points
+
 from compas_rv3.objects import ForceObject
 from .diagramobject import RhinoDiagramObject
 
@@ -14,25 +15,14 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
     Rhino scene object for force diagrams in RV3.
     """
 
-    @property
-    def group_vertices(self):
-        return "{}::vertices".format(self.settings["layer"])
-
-    @property
-    def group_edges(self):
-        return "{}::edges".format(self.settings["layer"])
-
-    def add_group_for_vertices(self):
-        if not compas_rhino.rs.IsGroup(self.group_vertices):
-            compas_rhino.rs.AddGroup(self.group_vertices)
-
-    def add_group_for_edges(self):
-        if not compas_rhino.rs.IsGroup(self.group_edges):
-            compas_rhino.rs.AddGroup(self.group_edges)
-
     def draw(self):
         """
         Draw the objects representing the force diagram.
+
+        Returns
+        -------
+        None
+
         """
         self.clear()
         if not self.visible:
@@ -40,7 +30,6 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
 
         layer = self.settings["layer"]
         self.artist.layer = layer
-        # self.artist.clear_layer()
         self.artist.vertex_xyz = self.vertex_xyz
 
         self.add_group_for_vertices()
