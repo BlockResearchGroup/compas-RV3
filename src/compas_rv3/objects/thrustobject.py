@@ -18,7 +18,15 @@ from .diagramobject import DiagramObject
 
 
 class ThrustObject(DiagramObject):
-    """Scene object for thrust diagrams in RV2."""
+    """
+    Scene object for thrust diagrams in RV2.
+
+    Attributes
+    ----------
+    vertex_xyz : dict[int, list[float, float, float]]
+        A dictionary mapping diagram vertices to their view coordinates.
+
+    """
 
     SETTINGS = Settings(
         {
@@ -37,9 +45,9 @@ class ThrustObject(DiagramObject):
             "color.vertices:is_anchor": ColorValue(Color.red()),
             "color.edges": ColorValue(Color.purple()),
             "color.selfweight": ColorValue(Color.white()),
-            "color.loads": ColorValue(Color.green().darkened(80)),
+            "color.loads": ColorValue(Color.green().darkened(50)),
             "color.residuals": ColorValue(Color.cyan()),
-            "color.reactions": ColorValue(Color.green().darkened(80)),
+            "color.reactions": ColorValue(Color.green().darkened(50)),
             "color.faces": ColorValue(Color.purple()),
             "color.pipes": ColorValue(Color.blue()),
             "color.invalid": ColorValue(Color.grey().lightened(70)),

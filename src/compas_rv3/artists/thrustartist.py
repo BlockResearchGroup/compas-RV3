@@ -15,6 +15,8 @@ class ThrustArtist(DiagramArtist):
 
         Parameters
         ----------
+        vertices : list[int]
+            The selection of vertices for which to draw the selfweight vectors.
         color : :class:`compas.colors.Color`
             The color of selfweight vectors.
         scale : float
@@ -36,6 +38,8 @@ class ThrustArtist(DiagramArtist):
 
         Parameters
         ----------
+        vertices : list[int]
+            The selection of vertices for which to draw the load vectors.
         color : :class:`compas.colors.Color`
             The color of load vectors.
         scale : float
@@ -57,6 +61,8 @@ class ThrustArtist(DiagramArtist):
 
         Parameters
         ----------
+        vertices : list[int]
+            The selection of vertices for which to draw the reaction forces.
         color : :class:`compas.colors.Color`
             The color of reaction forces.
         scale : float
@@ -78,6 +84,8 @@ class ThrustArtist(DiagramArtist):
 
         Parameters
         ----------
+        vertices : list[int]
+            The selection of vertices for which to draw the residual forces.
         color : :class:`compas.colors.Color`
             The color of residual force vectors.
         scale : float
@@ -99,6 +107,8 @@ class ThrustArtist(DiagramArtist):
 
         Parameters
         ----------
+        edges : list[tuple[int, int]]
+            The selection of edges for which to draw the force pipes.
         color : :class:`compas.colors.Color`
             The color of the pipes.
         scale : float

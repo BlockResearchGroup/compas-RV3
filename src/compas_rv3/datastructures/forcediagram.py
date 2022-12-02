@@ -10,8 +10,9 @@ from compas_rv3.datastructures.diagram import Diagram
 
 
 class ForceDiagram(Diagram, ForceDiagram):
-    def __init__(self, *args, **kwargs):
-        super(ForceDiagram, self).__init__(*args, **kwargs)
+    """
+    Data structure for force diagrams.
+    """
 
     def primal_edge(self, edge):
         """

@@ -19,7 +19,15 @@ from compas_ui.objects import MeshObject
 
 
 class PatternObject(MeshObject):
-    """Scene object for patterns in RV2."""
+    """
+    Scene object for patterns in RV2.
+
+    Attributes
+    ----------
+    vertex_xyz : dict[int, list[float, float, float]]
+        A dictionary mapping pattern vertices to their view coordinates.
+
+    """
 
     SETTINGS = Settings(
         {

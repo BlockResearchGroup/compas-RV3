@@ -8,4 +8,10 @@ from .formdiagram import FormDiagram
 from .forcediagram import ForceDiagram
 from .thrustdiagram import ThrustDiagram
 
-__all__ = ["Pattern", "Diagram", "FormDiagram", "ForceDiagram", "ThrustDiagram"]
+__all__ = [
+    "Pattern",
+    "Diagram",
+    "FormDiagram",
+    "ForceDiagram",
+    "ThrustDiagram",
+]

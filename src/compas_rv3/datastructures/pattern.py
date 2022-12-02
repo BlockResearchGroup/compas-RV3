@@ -8,6 +8,10 @@ from compas.datastructures import mesh_smooth_area
 
 
 class Pattern(Mesh):
+    """
+    Data structure for force layout patterns that are the basis for form diagrams.
+    """
+
     def __init__(self, *args, **kwargs):
         super(Pattern, self).__init__(*args, **kwargs)
         self.attributes.update({"openings": {}})

@@ -10,8 +10,9 @@ from .formdiagram import FormDiagram
 
 
 class ThrustDiagram(FormDiagram):
-    def __init__(self, *args, **kwargs):
-        super(ThrustDiagram, self).__init__(*args, **kwargs)
+    """
+    Data structure for thrust diagrams.
+    """
 
     def vertex_tributary_area(self, vertex):
         """

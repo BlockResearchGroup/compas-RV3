@@ -8,99 +8,53 @@ from compas.geometry import angle_vectors
 
 
 class Diagram(Mesh):
-    def __init__(self, *args, **kwargs):
-        super(Diagram, self).__init__(*args, **kwargs)
+    """
+    Base data structure for form, force and thrust diagrams.
+    """
 
     def edge_loop(self, uv):
-        if self.is_edge_on_boundary(*uv):
-            return self._edge_loop_on_boundary(uv)
+        """
+        Identify all edges on the same loop as a given edge.
+        This implementation is different than the base implmentation in the mesh data structure,
+        because of the "unloaded" faces in form, force, and thrust diagrams.
 
-        edges = []
-        current, previous = uv
-        edges.append((previous, current))
+        Parameters
+        ----------
+        uv : tuple[int, int]
+            The identifier of the edge.
 
-        while True:
-            if current == uv[1]:
-                break
-            if self.vertex_attribute(current, "is_fixed"):
-                break
-            nbrs = self.vertex_neighbors(current, ordered=True)
-            if len(nbrs) != 4:
-                break
-            i = nbrs.index(previous)
-            previous = current
-            current = nbrs[i - 2]
-            edges.append((previous, current))
+        Returns
+        -------
+        list[tuple[int, int]]
+            A list of edge identifiers.
 
-        edges[:] = [(u, v) for v, u in edges[::-1]]
-
-        if edges[0][0] == edges[-1][1]:
-            return edges
-
-        previous, current = uv
-        while True:
-            if self.vertex_attribute(current, "is_fixed"):
-                break
-            nbrs = self.vertex_neighbors(current, ordered=True)
-            if len(nbrs) != 4:
-                break
-            i = nbrs.index(previous)
-            previous = current
-            current = nbrs[i - 2]
-            edges.append((previous, current))
-
-        return edges
-
-    def _edge_loop_on_boundary(self, uv):
-        edges = []
-        current, previous = uv
-        edges.append((previous, current))
-
-        while True:
-            if current == uv[1]:
-                break
-            if self.vertex_attribute(current, "is_fixed"):
-                break
-            nbrs = self.vertex_neighbors(current)
-            if len(nbrs) == 2:
-                break
-            nbr = None
-            for temp in nbrs:
-                if temp == previous:
-                    continue
-                if self.is_edge_on_boundary(current, temp):
-                    nbr = temp
+        """
+        u, v = uv
+        f1, f2 = self.edge_faces(u, v)
+        if f1 is not None and not self.face_attribute(f1, "_is_loaded"):
+            loop = []
+            for edge in self.face_halfedges(f1):
+                if self.edge_attribute(edge, "_is_edge"):
+                    loop.append(edge)
+        elif f2 is not None and not self.face_attribute(f2, "_is_loaded"):
+            loop = []
+            for edge in self.face_halfedges(f2):
+                if self.edge_attribute(edge, "_is_edge"):
+                    loop.append(edge)
+        else:
+            forward = super(Diagram, self).halfedge_loop((u, v))
+            backward = super(Diagram, self).halfedge_loop((v, u))
+            loop = []
+            for u, v in forward:
+                loop.append((u, v))
+                if self.vertex_attribute(v, "is_fixed"):
                     break
-            if nbr is None:
-                break
-            previous, current = current, nbr
-            edges.append((previous, current))
-
-        edges[:] = [(u, v) for v, u in edges[::-1]]
-
-        if edges[0][0] == edges[-1][1]:
-            return edges
-
-        previous, current = uv
-        while True:
-            if self.vertex_attribute(current, "is_fixed"):
-                break
-            nbrs = self.vertex_neighbors(current)
-            if len(nbrs) == 2:
-                break
-            nbr = None
-            for temp in nbrs:
-                if temp == previous:
-                    continue
-                if self.is_edge_on_boundary(current, temp):
-                    nbr = temp
-                    break
-            if nbr is None:
-                break
-            previous, current = current, nbr
-            edges.append((previous, current))
-
-        return edges
+            if not self.vertex_attribute(backward[0][0], "is_fixed"):
+                for u, v in backward:
+                    loop.insert(0, (v, u))
+                    if self.vertex_attribute(v, "is_fixed"):
+                        break
+        return loop
 
     def collapse_small_edges(self, tol=1e-2):
         """

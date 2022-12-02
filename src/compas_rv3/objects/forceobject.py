@@ -17,7 +17,15 @@ from .diagramobject import DiagramObject
 
 
 class ForceObject(DiagramObject):
-    """Scene object for RV2 force diagrams."""
+    """
+    Scene object for RV2 force diagrams.
+
+    Attributes
+    ----------
+    vertex_xyz : dict[int, list[float, float, 0.0]]
+        A dictionary mapping diagram vertices to their view coordinates.
+
+    """
 
     SETTINGS = Settings(
         {

@@ -7,8 +7,9 @@ from compas_rv3.datastructures.diagram import Diagram
 
 
 class FormDiagram(Diagram, FormDiagram):
-    def __init__(self, *args, **kwargs):
-        super(FormDiagram, self).__init__(*args, **kwargs)
+    """
+    Data structure for form diagrams.
+    """
 
     @classmethod
     def from_pattern(cls, pattern):
