@@ -11,6 +11,97 @@ class Diagram(Mesh):
     def __init__(self, *args, **kwargs):
         super(Diagram, self).__init__(*args, **kwargs)
 
+    def edge_loop(self, uv):
+        if self.is_edge_on_boundary(*uv):
+            return self._edge_loop_on_boundary(uv)
+
+        edges = []
+        current, previous = uv
+        edges.append((previous, current))
+
+        while True:
+            if current == uv[1]:
+                break
+            if self.vertex_attribute(current, 'is_fixed'):
+                break
+            nbrs = self.vertex_neighbors(current, ordered=True)
+            if len(nbrs) != 4:
+                break
+            i = nbrs.index(previous)
+            previous = current
+            current = nbrs[i - 2]
+            edges.append((previous, current))
+
+        edges[:] = [(u, v) for v, u in edges[::-1]]
+
+        if edges[0][0] == edges[-1][1]:
+            return edges
+
+        previous, current = uv
+        while True:
+            if self.vertex_attribute(current, 'is_fixed'):
+                break
+            nbrs = self.vertex_neighbors(current, ordered=True)
+            if len(nbrs) != 4:
+                break
+            i = nbrs.index(previous)
+            previous = current
+            current = nbrs[i - 2]
+            edges.append((previous, current))
+
+        return edges
+
+    def _edge_loop_on_boundary(self, uv):
+        edges = []
+        current, previous = uv
+        edges.append((previous, current))
+
+        while True:
+            if current == uv[1]:
+                break
+            if self.vertex_attribute(current, 'is_fixed'):
+                break
+            nbrs = self.vertex_neighbors(current)
+            if len(nbrs) == 2:
+                break
+            nbr = None
+            for temp in nbrs:
+                if temp == previous:
+                    continue
+                if self.is_edge_on_boundary(current, temp):
+                    nbr = temp
+                    break
+            if nbr is None:
+                break
+            previous, current = current, nbr
+            edges.append((previous, current))
+
+        edges[:] = [(u, v) for v, u in edges[::-1]]
+
+        if edges[0][0] == edges[-1][1]:
+            return edges
+
+        previous, current = uv
+        while True:
+            if self.vertex_attribute(current, 'is_fixed'):
+                break
+            nbrs = self.vertex_neighbors(current)
+            if len(nbrs) == 2:
+                break
+            nbr = None
+            for temp in nbrs:
+                if temp == previous:
+                    continue
+                if self.is_edge_on_boundary(current, temp):
+                    nbr = temp
+                    break
+            if nbr is None:
+                break
+            previous, current = current, nbr
+            edges.append((previous, current))
+
+        return edges
+
     def collapse_small_edges(self, tol=1e-2):
         """
         Collapse the edges that are shorter than a given length.

@@ -2,6 +2,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import compas_rhino
 from compas.colors import Color
 from compas_ui.ui import UI
 from compas_rv3.objects import FormObject
@@ -28,43 +29,64 @@ class RhinoFormObject(RhinoDiagramObject, FormObject):
         self.artist.clear_layer()
         self.artist.vertex_xyz = self.vertex_xyz
 
-        if self.settings["show.vertices"]:
-            vertices = list(self.diagram.vertices())
-            color = {vertex: self.settings["color.vertices"] for vertex in vertices}
-            color_fixed = self.settings["color.vertices:is_fixed"]
-            color_anchor = self.settings["color.vertices:is_anchor"]
-            color.update({vertex: color_fixed for vertex in self.diagram.vertices_where(is_fixed=True) if vertex in vertices})
-            color.update({vertex: color_anchor for vertex in self.diagram.vertices_where(is_anchor=True) if vertex in vertices})
+        group_vertices = "{}::vertices".format(layer)
+        group_edges = "{}::edges".format(layer)
 
-            guids = self.artist.draw_vertices(vertices, color)
-            self.guids += guids
-            self.guid_vertex = zip(guids, vertices)
+        if not compas_rhino.rs.IsGroup(group_vertices):
+            compas_rhino.rs.AddGroup(group_vertices)
 
-        if self.settings["show.edges"]:
-            edges = list(self.diagram.edges_where({"_is_edge": True}))
-            colors = {}
+        if not compas_rhino.rs.IsGroup(group_edges):
+            compas_rhino.rs.AddGroup(group_edges)
 
-            for edge in edges:
-                if self.diagram.edge_attribute(edge, "_is_tension"):
-                    colors[edge] = self.settings["color.tension"]
-                else:
-                    colors[edge] = self.settings["color.edges"]
+        vertices = list(self.diagram.vertices())
+        color = {vertex: self.settings["color.vertices"] for vertex in vertices}
+        color_fixed = self.settings["color.vertices:is_fixed"]
+        color_anchor = self.settings["color.vertices:is_anchor"]
+        color.update({vertex: color_fixed for vertex in self.diagram.vertices_where(is_fixed=True) if vertex in vertices})
+        color.update({vertex: color_anchor for vertex in self.diagram.vertices_where(is_anchor=True) if vertex in vertices})
 
-            if ui.registry["RV3"]["show.forces"]:
-                if self.diagram.dual:
-                    _edges = list(self.diagram.dual.edges())
-                    lengths = [self.diagram.dual.edge_length(*edge) for edge in _edges]
-                    edges = [self.diagram.dual.primal_edge(edge) for edge in _edges]
-                    lmin = min(lengths)
-                    lmax = max(lengths)
-                    for edge, length in zip(edges, lengths):
-                        if lmin != lmax:
-                            i = (length - lmin) / (lmax - lmin)
-                            colors[edge] = Color.from_i(i)
+        guids = self.artist.draw_vertices(vertices, color)
+        self.guids += guids
+        self.guid_vertex = zip(guids, vertices)
 
-            guids = self.artist.draw_edges(edges, colors)
-            self.guids += guids
-            self.guid_edge = zip(guids, edges)
+        compas_rhino.rs.AddObjectsToGroup(guids, group_vertices)
+
+        if self.settings['show.vertices']:
+            compas_rhino.rs.ShowGroup(group_vertices)
+        else:
+            compas_rhino.rs.HideGroup(group_vertices)
+
+        edges = list(self.diagram.edges_where({"_is_edge": True}))
+        colors = {}
+
+        for edge in edges:
+            if self.diagram.edge_attribute(edge, "_is_tension"):
+                colors[edge] = self.settings["color.tension"]
+            else:
+                colors[edge] = self.settings["color.edges"]
+
+        if ui.registry["RV3"]["show.forces"]:
+            if self.diagram.dual:
+                _edges = list(self.diagram.dual.edges())
+                lengths = [self.diagram.dual.edge_length(*edge) for edge in _edges]
+                edges = [self.diagram.dual.primal_edge(edge) for edge in _edges]
+                lmin = min(lengths)
+                lmax = max(lengths)
+                for edge, length in zip(edges, lengths):
+                    if lmin != lmax:
+                        i = (length - lmin) / (lmax - lmin)
+                        colors[edge] = Color.from_i(i)
+
+        guids = self.artist.draw_edges(edges, colors)
+        self.guids += guids
+        self.guid_edge = zip(guids, edges)
+
+        compas_rhino.rs.AddObjectsToGroup(guids, group_edges)
+
+        if self.settings['show.edges']:
+            compas_rhino.rs.ShowGroup(group_edges)
+        else:
+            compas_rhino.rs.HideGroup(group_edges)
 
         if ui.registry["RV3"]["show.angles"]:
             tol = ui.registry["RV3"]["tol.angles"]

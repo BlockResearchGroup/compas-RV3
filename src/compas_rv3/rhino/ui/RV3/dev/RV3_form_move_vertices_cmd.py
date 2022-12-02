@@ -26,17 +26,17 @@ def RunCommand(is_interactive):
         return
 
     # show the form vertices
-    # form_vertices = "{}::vertices".format(form.settings["layer"])
-    # compas_rhino.rs.ShowGroup(form_vertices)
-    compas_rhino.rs.ShowObjects(form.guid_vertex.keys())
+    form_vertices = "{}::vertices".format(form.settings["layer"])
+    compas_rhino.rs.ShowGroup(form_vertices)
+    # compas_rhino.rs.ShowObjects(form.guid_vertex.keys())
 
     if thrust:
         # hide the thrust vertices
-        # thrust_vertices_free = "{}::vertices_free".format(thrust.settings["layer"])
-        # thrust_vertices_anchor = "{}::vertices_anchor".format(thrust.settings["layer"])
-        # compas_rhino.rs.HideGroup(thrust_vertices_free)
-        # compas_rhino.rs.HideGroup(thrust_vertices_anchor)
-        compas_rhino.rs.HideObjects(thrust.guid_vertex.keys())
+        thrust_vertices_free = "{}::vertices_free".format(thrust.settings["layer"])
+        thrust_vertices_anchor = "{}::vertices_anchor".format(thrust.settings["layer"])
+        compas_rhino.rs.HideGroup(thrust_vertices_free)
+        compas_rhino.rs.HideGroup(thrust_vertices_anchor)
+        # compas_rhino.rs.HideObjects(thrust.guid_vertex.keys())
 
     compas_rhino.rs.Redraw()
 
@@ -55,7 +55,7 @@ def RunCommand(is_interactive):
         vertices = form.select_vertices()
 
     if vertices:
-        if form.move_vertices_horizontal(vertices):
+        if form.move_vertices_direction(vertices, 'xy'):
             if form.diagram.dual:
                 form.diagram.dual.update_angle_deviations()
             if thrust:

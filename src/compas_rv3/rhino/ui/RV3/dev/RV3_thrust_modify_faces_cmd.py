@@ -25,9 +25,9 @@ def RunCommand(is_interactive):
         return
 
     # hide the form vertices
-    # form_vertices = "{}::vertices".format(form.settings["layer"])
-    # compas_rhino.rs.HideGroup(form_vertices)
-    compas_rhino.rs.HideObjects(form.guid_vertex.keys())
+    form_vertices = "{}::vertices".format(form.settings["layer"])
+    compas_rhino.rs.HideGroup(form_vertices)
+    # compas_rhino.rs.HideObjects(form.guid_face.keys())
 
     # selection options
     options = ["Manual"]

@@ -119,37 +119,73 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
         self.artist.clear_layer()
         self.artist.vertex_xyz = self.vertex_xyz
 
+        group_free = "{}::vertices_free".format(layer)
+        group_anchor = "{}::vertices_anchor".format(layer)
+
+        group_edges = "{}::edges".format(layer)
+        group_faces = "{}::faces".format(layer)
+
+        if not compas_rhino.rs.IsGroup(group_free):
+            compas_rhino.rs.AddGroup(group_free)
+
+        if not compas_rhino.rs.IsGroup(group_anchor):
+            compas_rhino.rs.AddGroup(group_anchor)
+
+        if not compas_rhino.rs.IsGroup(group_edges):
+            compas_rhino.rs.AddGroup(group_edges)
+
+        if not compas_rhino.rs.IsGroup(group_faces):
+            compas_rhino.rs.AddGroup(group_faces)
+
+        free = list(self.diagram.vertices_where(is_anchor=False))
+        anchors = list(self.diagram.vertices_where(is_anchor=True))
+        color = {}
+        color_free = self.settings["color.vertices"] if self.is_valid else self.settings["color.invalid"]
+        color_fixed = self.settings["color.vertices:is_fixed"]
+        color_anchor = self.settings["color.vertices:is_anchor"]
+        color.update({vertex: color_free for vertex in free})
+        color.update({vertex: color_fixed for vertex in self.diagram.vertices_where(is_fixed=True)})
+        color.update({vertex: color_anchor for vertex in anchors})
+        guids_free = self.artist.draw_vertices(free, color)
+        guids_anchors = self.artist.draw_vertices(anchors, color)
+        guids = guids_free + guids_anchors
+        vertices = free + anchors
+        self.guids += guids
+        self.guid_vertex = zip(guids, vertices)
+
+        compas_rhino.rs.AddObjectsToGroup(guids_free, group_free)
+        compas_rhino.rs.AddObjectsToGroup(guids_anchors, group_anchor)
+
         if self.settings["show.vertices"]:
-            vertices = list(self.diagram.vertices())
-            color = {}
-            color_free = self.settings["color.vertices"] if self.is_valid else self.settings["color.invalid"]
-            color_fixed = self.settings["color.vertices:is_fixed"]
-            color_anchor = self.settings["color.vertices:is_anchor"]
-            color.update({vertex: color_free for vertex in self.diagram.vertices()})
-            color.update({vertex: color_fixed for vertex in self.diagram.vertices_where(is_fixed=True)})
-            color.update({vertex: color_anchor for vertex in self.diagram.vertices_where(is_anchor=True)})
-            guids = self.artist.draw_vertices(vertices, color)
-            self.guids += guids
-            self.guid_vertex = zip(guids, vertices)
+            compas_rhino.rs.HideGroup(group_free)
+            compas_rhino.rs.ShowGroup(group_anchor)
+        else:
+            compas_rhino.rs.HideGroup(group_free)
+            compas_rhino.rs.HideGroup(group_anchor)
+
+        edges = list(self.diagram.edges_where(_is_edge=True))
+        color = {edge: self.settings["color.edges"] if self.is_valid else self.settings["color.invalid"] for edge in edges}
+
+        if ui.registry["RV3"]["show.forces"]:
+            if self.diagram.dual:
+                _edges = list(self.diagram.dual.edges())
+                lengths = [self.diagram.dual.edge_length(*edge) for edge in _edges]
+                edges = [self.diagram.dual.primal_edge(edge) for edge in _edges]
+                lmin = min(lengths)
+                lmax = max(lengths)
+                for edge, length in zip(edges, lengths):
+                    if lmin != lmax:
+                        color[edge] = Color.from_i((length - lmin) / (lmax - lmin))
+        guids = self.artist.draw_edges(edges, color)
+        self.guids += guids
+        self.guid_edge = zip(guids, edges)
+
+        compas_rhino.rs.AddObjectsToGroup(guids, group_edges)
 
         if self.settings["show.edges"]:
-            edges = list(self.diagram.edges_where(_is_edge=True))
-            color = {edge: self.settings["color.edges"] if self.is_valid else self.settings["color.invalid"] for edge in edges}
-
-            # color analysis
-            if ui.registry["RV3"]["show.forces"]:
-                if self.diagram.dual:
-                    _edges = list(self.diagram.dual.edges())
-                    lengths = [self.diagram.dual.edge_length(*edge) for edge in _edges]
-                    edges = [self.diagram.dual.primal_edge(edge) for edge in _edges]
-                    lmin = min(lengths)
-                    lmax = max(lengths)
-                    for edge, length in zip(edges, lengths):
-                        if lmin != lmax:
-                            color[edge] = Color.from_i((length - lmin) / (lmax - lmin))
-            guids = self.artist.draw_edges(edges, color)
-            self.guids += guids
-            self.guid_edge = zip(guids, edges)
+            compas_rhino.rs.ShowGroup(group_edges)
+        else:
+            compas_rhino.rs.HideGroup(group_edges)
 
         if self.settings["show.faces"]:
             faces = list(self.diagram.faces_where(_is_loaded=True))
@@ -175,13 +211,19 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
                             "vertexcolors": [vertex_colors[vertex] for vertex in self.diagram.face_vertices(face)],
                         }
                     )
-                guids = compas_rhino.draw_faces(facets, layer=self.layer, clear=False, redraw=False)
+                guids = compas_rhino.draw_faces(facets, layer=self.settings['layer'], clear=False, redraw=False)
 
             else:
                 guids = self.artist.draw_faces(faces, color)
 
             self.guids += guids
             self.guid_face = zip(guids, faces)
+
+            compas_rhino.rs.AddObjectsToGroup(guids, group_faces)
+            compas_rhino.rs.ShowGroup(group_faces)
+
+        else:
+            compas_rhino.rs.HideGroup(group_faces)
 
         # ======================================================================
         # Overlays
