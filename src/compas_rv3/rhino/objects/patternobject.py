@@ -53,7 +53,7 @@ class RhinoPatternObject(RhinoMeshObject, PatternObject):
             return
         layer = self.settings["layer"]
         self.artist.layer = layer
-        self.artist.clear_layer()
+        # self.artist.clear_layer()
         self.artist.vertex_xyz = self.vertex_xyz
 
         group_vertices = "{}::vertices".format(layer)

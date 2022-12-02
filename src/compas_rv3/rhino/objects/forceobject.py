@@ -40,7 +40,7 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
 
         layer = self.settings["layer"]
         self.artist.layer = layer
-        self.artist.clear_layer()
+        # self.artist.clear_layer()
         self.artist.vertex_xyz = self.vertex_xyz
 
         self.add_group_for_vertices()
