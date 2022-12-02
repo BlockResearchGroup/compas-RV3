@@ -21,7 +21,7 @@ __author__ = ["Tom Van Mele, Juney Lee, Li Chen"]
 __copyright__ = "ETH Zurich - Block Research Group"
 __license__ = "MIT License"
 __email__ = "van.mele@arch.ethz.ch, juney-lee@som.com, li.chen@arch.ethz.ch"
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 
 HERE = os.path.dirname(__file__)

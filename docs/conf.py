@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../src'))
 project = "compas-RV3"
 copyright = ""
 author = "Tom Van Mele, Juney Lee, Li Chen"
-release = "0.2.3"
+release = "0.2.4"
 version = ".".join(release.split(".")[0:2])
 
 master_doc = "index"
