@@ -13,44 +13,65 @@ class RhinoDiagramObject(RhinoMeshObject, DiagramObject):
 
     Attributes
     ----------
-    group_vertices : str
+    groupname_vertices : str
         The name of the group containing the vertices.
-    group_edges : str
+    groupname_edges : str
         The name of the group containing the edges.
 
     """
 
+    @RhinoMeshObject.guid_vertex.setter
+    def guid_vertex(self, items):
+        RhinoMeshObject.guid_vertex.fset(self, items)
+
+        guids = list(self.guid_vertex.keys())
+        groupname = self.groupname_vertices
+        compas_rhino.rs.AddObjectsToGroup(guids, groupname)
+        if self.settings["show.vertices"]:
+            compas_rhino.rs.ShowGroup(groupname)
+        else:
+            compas_rhino.rs.HideGroup(groupname)
+
+    @RhinoMeshObject.guid_edge.setter
+    def guid_edge(self, items):
+        RhinoMeshObject.guid_edge.fset(self, items)
+
+        guids = list(self.guid_edge.keys())
+        groupname = self.groupname_edges
+        compas_rhino.rs.AddObjectsToGroup(guids, groupname)
+        if self.settings["show.edges"]:
+            compas_rhino.rs.ShowGroup(groupname)
+        else:
+            compas_rhino.rs.HideGroup(groupname)
+
+    @RhinoMeshObject.guid_face.setter
+    def guid_face(self, items):
+        RhinoMeshObject.guid_face.fset(self, items)
+
+        guids = list(self.guid_face.keys())
+        groupname = self.groupname_faces
+        compas_rhino.rs.AddObjectsToGroup(guids, groupname)
+        if self.settings["show.faces"]:
+            compas_rhino.rs.ShowGroup(groupname)
+        else:
+            compas_rhino.rs.HideGroup(groupname)
+
     @property
-    def group_vertices(self):
+    def groupname_vertices(self):
         return "{}::vertices".format(self.settings["layer"])
 
     @property
-    def group_edges(self):
+    def groupname_edges(self):
         return "{}::edges".format(self.settings["layer"])
 
-    def add_group_for_vertices(self):
-        """
-        Add the group for the diagram vertices to the Rhino model if it doesn't exist yet.
+    @property
+    def groupname_faces(self):
+        return "{}::faces".format(self.settings["layer"])
 
-        Returns
-        -------
-        None
-
-        """
-        if not compas_rhino.rs.IsGroup(self.group_vertices):
-            compas_rhino.rs.AddGroup(self.group_vertices)
-
-    def add_group_for_edges(self):
-        """
-        Add the group for the diagram edges to the Rhino model if it doesn't exist yet.
-
-        Returns
-        -------
-        None
-
-        """
-        if not compas_rhino.rs.IsGroup(self.group_edges):
-            compas_rhino.rs.AddGroup(self.group_edges)
+    @staticmethod
+    def add_group(group):
+        if not compas_rhino.rs.IsGroup(group):
+            compas_rhino.rs.AddGroup(group)
 
     def select_vertex_points(self, vertices):
         """
