@@ -5,6 +5,7 @@ from __future__ import division
 import compas_rhino
 from compas.colors import Color
 from compas.geometry import centroid_points
+from compas.utilities import remap_values
 
 from compas_rv3.objects import ForceObject
 from .diagramobject import RhinoDiagramObject
@@ -32,9 +33,6 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
         self.artist.layer = layer
         self.artist.vertex_xyz = self.vertex_xyz
 
-        self.add_group_for_vertices()
-        self.add_group_for_edges()
-
         self._draw_vertices()
         self._draw_edges()
         self._draw_edgelabels()
@@ -57,12 +55,6 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
         self.guids += guids
         self.guid_vertex = zip(guids, vertices)
 
-        compas_rhino.rs.AddObjectsToGroup(guids, self.group_vertices)
-        if self.settings["show.vertices"]:
-            compas_rhino.rs.ShowGroup(self.group_vertices)
-        else:
-            compas_rhino.rs.HideGroup(self.group_vertices)
-
     def _draw_edges(self):
         """
         Draw the edges of the diagram.
@@ -76,32 +68,22 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
 
         """
         edges = list(self.diagram.edges())
-        colors = {}
+        edge_color = {}
         for edge in edges:
             primal = self.diagram.primal_edge(edge)
             if self.diagram.primal.edge_attribute(primal, "_is_tension"):
-                colors[edge] = self.settings["color.tension"]
+                edge_color[edge] = self.settings["color.tension"]
             else:
-                colors[edge] = self.settings["color.edges"]
+                edge_color[edge] = self.settings["color.edges"]
 
         if self.ui.registry["RV3"]["show.forces"]:
             lengths = [self.diagram.edge_length(*edge) for edge in edges]
-            lmin = min(lengths)
-            lmax = max(lengths)
-            if lmin != lmax:
-                lspan = lmax - lmin
-                for edge, length in zip(edges, lengths):
-                    colors[edge] = Color.from_i((length - lmin) / lspan)
+            for edge, value in zip(edges, remap_values(lengths)):
+                edge_color[edge] = Color.from_i(value)
 
-        guids = self.artist.draw_edges(edges, colors)
+        guids = self.artist.draw_edges(edges, edge_color)
         self.guids += guids
         self.guid_edge = zip(guids, edges)
-
-        compas_rhino.rs.AddObjectsToGroup(guids, self.group_edges)
-        if self.settings["show.edges"]:
-            compas_rhino.rs.ShowGroup(self.group_edges)
-        else:
-            compas_rhino.rs.HideGroup(self.group_edges)
 
     def _draw_edgelabels(self):
         """
@@ -125,7 +107,7 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
         amax = max(angles)
         aspan = amax - amin
 
-        if aspan**2 < 0.001**2:
+        if aspan**2 < 0.01**2:
             return
 
         vertex_xyz = self.vertex_xyz

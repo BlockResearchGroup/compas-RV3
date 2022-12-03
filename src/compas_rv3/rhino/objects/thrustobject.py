@@ -4,7 +4,8 @@ from __future__ import division
 
 import compas_rhino
 from compas.colors import Color
-from compas_ui.ui import UI
+from compas.colors import ColorMap
+from compas.utilities import remap_values
 from compas_rv3.objects import ThrustObject
 from compas_rv3.rhino.conduits import SelfWeightConduit
 from compas_rv3.rhino.conduits import ReactionConduit
@@ -24,6 +25,16 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
         self._conduit_reactions = None
         self._conduit_loads = None
         self._conduit_residuals = None
+        self.add_group(self.groupname_vertices_free)
+        self.add_group(self.groupname_vertices_anchored)
+
+    @property
+    def groupname_vertices_free(self):
+        return "{}::vertices::free".format(self.settings["layer"])
+
+    @property
+    def groupname_vertices_anchored(self):
+        return "{}::vertices::anchored".format(self.settings["layer"])
 
     @property
     def conduit_selfweight(self):
@@ -69,6 +80,15 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             )
         return self._conduit_residuals
 
+    def clear_conduit(self, conduit):
+        try:
+            conduit.disable()
+        except Exception:
+            pass
+        finally:
+            del conduit
+            conduit = None
+
     def clear_conduits(self):
         try:
             self.conduit_selfweight.disable()
@@ -108,99 +128,82 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
 
     def draw(self):
         """Draw the objects representing the thrust diagram."""
-        ui = UI()
-
         self.clear()
         if not self.visible:
             return
 
         layer = self.settings["layer"]
         self.artist.layer = layer
-        # self.artist.clear_layer()
         self.artist.vertex_xyz = self.vertex_xyz
 
-        group_free = "{}::vertices_free".format(layer)
-        group_anchor = "{}::vertices_anchor".format(layer)
+        self._draw_vertices()
+        self._draw_edges()
+        self._draw_faces()
+        self._draw_pipes()
+        self._draw_overlays()
 
-        group_edges = "{}::edges".format(layer)
-        group_faces = "{}::faces".format(layer)
-
-        if not compas_rhino.rs.IsGroup(group_free):
-            compas_rhino.rs.AddGroup(group_free)
-
-        if not compas_rhino.rs.IsGroup(group_anchor):
-            compas_rhino.rs.AddGroup(group_anchor)
-
-        if not compas_rhino.rs.IsGroup(group_edges):
-            compas_rhino.rs.AddGroup(group_edges)
-
-        if not compas_rhino.rs.IsGroup(group_faces):
-            compas_rhino.rs.AddGroup(group_faces)
-
+    def _draw_vertices(self):
         free = list(self.diagram.vertices_where(is_anchor=False))
-        anchors = list(self.diagram.vertices_where(is_anchor=True))
+        fixed = list(self.diagram.vertices_where(is_fixed=True))
+        anchored = list(self.diagram.vertices_where(is_anchor=True))
+
         color = {}
-        color_free = self.settings["color.vertices"] if self.is_valid else self.settings["color.invalid"]
+        color_free = self.settings["color.vertices"]
         color_fixed = self.settings["color.vertices:is_fixed"]
         color_anchor = self.settings["color.vertices:is_anchor"]
+        if not self.is_valid:
+            color_free = self.settings["color.invalid"]
         color.update({vertex: color_free for vertex in free})
-        color.update({vertex: color_fixed for vertex in self.diagram.vertices_where(is_fixed=True)})
-        color.update({vertex: color_anchor for vertex in anchors})
+        color.update({vertex: color_fixed for vertex in fixed})
+        color.update({vertex: color_anchor for vertex in anchored})
+
         guids_free = self.artist.draw_vertices(free, color)
-        guids_anchors = self.artist.draw_vertices(anchors, color)
-        guids = guids_free + guids_anchors
-        vertices = free + anchors
+        guids_anchored = self.artist.draw_vertices(anchored, color)
+
+        guids = guids_free + guids_anchored
+        vertices = free + anchored
         self.guids += guids
         self.guid_vertex = zip(guids, vertices)
 
-        compas_rhino.rs.AddObjectsToGroup(guids_free, group_free)
-        compas_rhino.rs.AddObjectsToGroup(guids_anchors, group_anchor)
+        compas_rhino.rs.AddObjectsToGroup(guids_free, self.groupname_vertices_free)
+        compas_rhino.rs.AddObjectsToGroup(guids_anchored, self.groupname_vertices_anchored)
 
         if self.settings["show.vertices"]:
-            compas_rhino.rs.HideGroup(group_free)
-            compas_rhino.rs.ShowGroup(group_anchor)
+            compas_rhino.rs.HideGroup(self.groupname_vertices_free)
+            compas_rhino.rs.ShowGroup(self.groupname_vertices_anchored)
         else:
-            compas_rhino.rs.HideGroup(group_free)
-            compas_rhino.rs.HideGroup(group_anchor)
+            compas_rhino.rs.HideGroup(self.groupname_vertices_free)
+            compas_rhino.rs.HideGroup(self.groupname_vertices_anchored)
 
+    def _draw_edges(self):
         edges = list(self.diagram.edges_where(_is_edge=True))
-        color = {edge: self.settings["color.edges"] if self.is_valid else self.settings["color.invalid"] for edge in edges}
 
-        if ui.registry["RV3"]["show.forces"]:
+        color = self.settings["color.edges"] if self.is_valid else self.settings["color.invalid"]
+        edge_color = {edge: color for edge in edges}
+
+        if self.ui.registry["RV3"]["show.forces"]:
             if self.diagram.dual:
                 _edges = list(self.diagram.dual.edges())
-                lengths = [self.diagram.dual.edge_length(*edge) for edge in _edges]
                 edges = [self.diagram.dual.primal_edge(edge) for edge in _edges]
-                lmin = min(lengths)
-                lmax = max(lengths)
-                for edge, length in zip(edges, lengths):
-                    if lmin != lmax:
-                        color[edge] = Color.from_i((length - lmin) / (lmax - lmin))
-        guids = self.artist.draw_edges(edges, color)
+                lengths = [self.diagram.dual.edge_length(*edge) for edge in _edges]
+                for edge, value in zip(edges, remap_values(lengths)):
+                    edge_color[edge] = Color.from_i(value)
+
+        guids = self.artist.draw_edges(edges, edge_color)
         self.guids += guids
         self.guid_edge = zip(guids, edges)
 
-        compas_rhino.rs.AddObjectsToGroup(guids, group_edges)
+    def _draw_faces(self):
+        faces = list(self.diagram.faces_where(_is_loaded=True))
 
-        if self.settings["show.edges"]:
-            compas_rhino.rs.ShowGroup(group_edges)
-        else:
-            compas_rhino.rs.HideGroup(group_edges)
-
-        if self.settings["show.faces"]:
-            faces = list(self.diagram.faces_where(_is_loaded=True))
-            color = {face: self.settings["color.faces"] if self.is_valid else self.settings["color.invalid"] for face in faces}
-
-            if self.is_valid and self.settings["show.stresses"]:
+        if self.is_valid:
+            if self.settings["show.stresses"]:
                 vertices = list(self.diagram.vertices())
-                vertex_colors = {vertex: self.settings["color.vertices"] if self.is_valid else self.settings["color.invalid"] for vertex in vertices}
+                color = self.settings["color.invalid"]
+                vertex_color = {vertex: color for vertex in vertices}
                 stresses = [self.diagram.vertex_lumped_stress(vertex) for vertex in vertices]
-                smin = min(stresses)
-                smax = max(stresses)
-
-                for vertex, stress in zip(vertices, stresses):
-                    if smin != smax:
-                        vertex_colors[vertex] = Color.from_i((stress - smin) / (smax - smin))
+                for edge, value in zip(vertices, remap_values(stresses)):
+                    vertex_color[edge] = Color.from_i(value)
 
                 facets = []
                 for face in faces:
@@ -208,29 +211,53 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
                         {
                             "points": self.diagram.face_coordinates(face),
                             "name": "{}.face.{}".format(self.diagram.name, face),
-                            "vertexcolors": [vertex_colors[vertex] for vertex in self.diagram.face_vertices(face)],
+                            "vertexcolors": [vertex_color[vertex].rgb255 for vertex in self.diagram.face_vertices(face)],
                         }
                     )
                 guids = compas_rhino.draw_faces(facets, layer=self.settings["layer"], clear=False, redraw=False)
 
             else:
-                guids = self.artist.draw_faces(faces, color)
-
-            self.guids += guids
-            self.guid_face = zip(guids, faces)
-
-            compas_rhino.rs.AddObjectsToGroup(guids, group_faces)
-            compas_rhino.rs.ShowGroup(group_faces)
+                color = self.settings["color.faces"]
+                face_color = {face: color for face in faces}
+                guids = self.artist.draw_faces(faces, face_color)
 
         else:
-            compas_rhino.rs.HideGroup(group_faces)
+            color = self.settings["color.invalid"]
+            face_color = {face: color for face in faces}
+            guids = self.artist.draw_faces(faces, face_color)
 
-        # ======================================================================
-        # Overlays
-        # --------
-        # Color overlays for various display modes.
-        # ======================================================================
+        self.guids += guids
+        self.guid_face = zip(guids, faces)
 
+    def _draw_pipes(self):
+        if not self.is_valid:
+            return
+        if not self.settings["show.pipes"]:
+            return
+
+        tol = self.settings["tol.pipes"]
+        edges = list(self.diagram.edges_where(_is_edge=True))
+        edge_color = {edge: self.settings["color.pipes"] for edge in edges}
+
+        if self.ui.registry["RV3"]["show.forces"]:
+            if self.diagram.dual:
+                _edges = list(self.diagram.dual.edges())
+                lengths = [self.diagram.dual.edge_length(*edge) for edge in _edges]
+                edges = [self.diagram.dual.primal_edge(edge) for edge in _edges]
+                for edge, value in zip(edges, remap_values(lengths)):
+                    edge_color[edge] = Color.from_i(value)
+
+        scale = self.settings["scale.pipes"]
+        guids = self.artist.draw_pipes(edges, edge_color, scale, tol)
+        self.guids += guids
+
+    # ======================================================================
+    # Overlays
+    # --------
+    # Color overlays for various display modes.
+    # ======================================================================
+
+    def _draw_overlays(self):
         # selfweight
         self.conduit_selfweight.disable()
         if self.is_valid and self.settings["show.selfweight"]:
@@ -238,7 +265,6 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             self.conduit_selfweight.scale = self.settings["scale.selfweight"]
             self.conduit_selfweight.tol = self.settings["tol.selfweight"]
             self.conduit_selfweight.enable()
-
         # loads
         self.conduit_loads.disable()
         if self.is_valid and self.settings["show.loads"]:
@@ -246,7 +272,6 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             self.conduit_loads.scale = self.settings["scale.externalforces"]
             self.conduit_loads.tol = self.settings["tol.externalforces"]
             self.conduit_loads.enable()
-
         # residuals
         self.conduit_residuals.disable()
         if self.is_valid and self.settings["show.residuals"]:
@@ -254,7 +279,6 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             self.conduit_residuals.scale = self.settings["scale.residuals"]
             self.conduit_residuals.tol = self.settings["tol.residuals"]
             self.conduit_residuals.enable()
-
         # reactions
         self.conduit_reactions.disable()
         if self.is_valid and self.settings["show.reactions"]:
@@ -263,26 +287,9 @@ class RhinoThrustObject(RhinoDiagramObject, ThrustObject):
             self.conduit_reactions.tol = self.settings["tol.externalforces"]
             self.conduit_reactions.enable()
 
-        if self.is_valid and self.settings["show.pipes"]:
-            tol = self.settings["tol.pipes"]
-            edges = list(self.diagram.edges_where(_is_edge=True))
-            color = {edge: self.settings["color.pipes"] for edge in edges}
-
-            # color analysis
-            if ui.registry["RV3"]["show.forces"]:
-                if self.diagram.dual:
-                    _edges = list(self.diagram.dual.edges())
-                    lengths = [self.diagram.dual.edge_length(*edge) for edge in _edges]
-                    edges = [self.diagram.dual.primal_edge(edge) for edge in _edges]
-                    lmin = min(lengths)
-                    lmax = max(lengths)
-                    for edge, length in zip(edges, lengths):
-                        if lmin != lmax:
-                            color[edge] = Color.from_i((length - lmin) / (lmax - lmin))
-
-            scale = self.settings["scale.pipes"]
-            guids = self.artist.draw_pipes(edges, color, scale, tol)
-            self.guids += guids
+    # ======================================================================
+    # Rhino View Control
+    # ======================================================================
 
     def select_vertices_free(self):
         """

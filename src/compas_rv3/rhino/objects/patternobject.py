@@ -12,6 +12,59 @@ class RhinoPatternObject(RhinoMeshObject, PatternObject):
     Rhino scene object for patterns in RV3.
     """
 
+    @RhinoMeshObject.guid_vertex.setter
+    def guid_vertex(self, items):
+        RhinoMeshObject.guid_vertex.fset(self, items)
+
+        guids = list(self.guid_vertex.keys())
+        groupname = self.groupname_vertices
+        compas_rhino.rs.AddObjectsToGroup(guids, groupname)
+        if self.settings["show.vertices"]:
+            compas_rhino.rs.ShowGroup(groupname)
+        else:
+            compas_rhino.rs.HideGroup(groupname)
+
+    @RhinoMeshObject.guid_edge.setter
+    def guid_edge(self, items):
+        RhinoMeshObject.guid_edge.fset(self, items)
+
+        guids = list(self.guid_edge.keys())
+        groupname = self.groupname_edges
+        compas_rhino.rs.AddObjectsToGroup(guids, groupname)
+        if self.settings["show.edges"]:
+            compas_rhino.rs.ShowGroup(groupname)
+        else:
+            compas_rhino.rs.HideGroup(groupname)
+
+    @RhinoMeshObject.guid_face.setter
+    def guid_face(self, items):
+        RhinoMeshObject.guid_face.fset(self, items)
+
+        guids = list(self.guid_face.keys())
+        groupname = self.groupname_faces
+        compas_rhino.rs.AddObjectsToGroup(guids, groupname)
+        if self.settings["show.faces"]:
+            compas_rhino.rs.ShowGroup(groupname)
+        else:
+            compas_rhino.rs.HideGroup(groupname)
+
+    @property
+    def groupname_vertices(self):
+        return "{}::vertices".format(self.settings["layer"])
+
+    @property
+    def groupname_edges(self):
+        return "{}::edges".format(self.settings["layer"])
+
+    @property
+    def groupname_faces(self):
+        return "{}::faces".format(self.settings["layer"])
+
+    @staticmethod
+    def add_group(group):
+        if not compas_rhino.rs.IsGroup(group):
+            compas_rhino.rs.AddGroup(group)
+
     def select_vertex_points(self, vertices):
         guids = []
         for guid, vertex in self.guid_vertex.items():
@@ -51,27 +104,20 @@ class RhinoPatternObject(RhinoMeshObject, PatternObject):
         self.clear()
         if not self.visible:
             return
+
         layer = self.settings["layer"]
         self.artist.layer = layer
-        # self.artist.clear_layer()
         self.artist.vertex_xyz = self.vertex_xyz
 
-        group_vertices = "{}::vertices".format(layer)
-        group_edges = "{}::edges".format(layer)
-        group_faces = "{}::faces".format(layer)
+        self._draw_vertices()
+        self._draw_edges()
+        self._draw_faces()
 
-        if not compas_rhino.rs.IsGroup(group_vertices):
-            compas_rhino.rs.AddGroup(group_vertices)
-
-        if not compas_rhino.rs.IsGroup(group_edges):
-            compas_rhino.rs.AddGroup(group_edges)
-
-        if not compas_rhino.rs.IsGroup(group_faces):
-            compas_rhino.rs.AddGroup(group_faces)
+    def _draw_vertices(self):
+        vertices = list(self.mesh.vertices())
 
         color_fixed = self.settings["color.vertices:is_fixed"]
         color_anchor = self.settings["color.vertices:is_anchor"]
-        vertices = list(self.mesh.vertices())
         color = {vertex: self.settings["color.vertices"] for vertex in vertices}
         color.update({vertex: color_fixed for vertex in self.mesh.vertices_where(is_fixed=True)})
         color.update({vertex: color_anchor for vertex in self.mesh.vertices_where(is_anchor=True)})
@@ -80,37 +126,16 @@ class RhinoPatternObject(RhinoMeshObject, PatternObject):
         self.guids += guids
         self.guid_vertex = zip(guids, vertices)
 
-        compas_rhino.rs.AddObjectsToGroup(guids, group_vertices)
-
-        if self.settings["show.vertices"]:
-            compas_rhino.rs.ShowGroup(group_vertices)
-        else:
-            compas_rhino.rs.HideGroup(group_vertices)
-
+    def _draw_edges(self):
         edges = list(self.mesh.edges())
         color = {edge: self.settings["color.edges"] for edge in edges}
-
         guids = self.artist.draw_edges(edges, color)
         self.guids += guids
         self.guid_edge = zip(guids, edges)
 
-        compas_rhino.rs.AddObjectsToGroup(guids, group_edges)
-
-        if self.settings["show.edges"]:
-            compas_rhino.rs.ShowGroup(group_edges)
-        else:
-            compas_rhino.rs.HideGroup(group_edges)
-
+    def _draw_faces(self):
         faces = list(self.mesh.faces())
         color = {face: self.settings["color.faces"] for face in faces}
-
         guids = self.artist.draw_faces(faces, color)
         self.guids += guids
         self.guid_face = zip(guids, faces)
-
-        compas_rhino.rs.AddObjectsToGroup(guids, group_faces)
-
-        if self.settings["show.faces"]:
-            compas_rhino.rs.ShowGroup(group_faces)
-        else:
-            compas_rhino.rs.HideGroup(group_faces)
