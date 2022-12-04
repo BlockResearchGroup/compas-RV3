@@ -34,7 +34,7 @@ class FormObject(DiagramObject):
             "show.edges": BoolValue(True),
             "color.vertices": ColorValue(Color.green()),
             "color.vertices:is_fixed": ColorValue(Color.blue()),
-            "color.vertices:is_anchor": ColorValue(Color.white()),
+            "color.vertices:is_anchor": ColorValue(Color.red()),
             "color.edges": ColorValue(Color.green().darkened(50)),
             "color.tension": ColorValue(Color.red()),
         }
