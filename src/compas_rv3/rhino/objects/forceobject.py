@@ -55,6 +55,11 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
         self.guids += guids
         self.guid_vertex = zip(guids, vertices)
 
+        if self.settings["show.vertices"]:
+            compas_rhino.rs.ShowGroup(self.groupname_vertices)
+        else:
+            compas_rhino.rs.HideGroup(self.groupname_vertices)
+
     def _draw_edges(self):
         """
         Draw the edges of the diagram.
@@ -77,13 +82,17 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
                 edge_color[edge] = self.settings["color.edges"]
 
         if self.ui.registry["RV3"]["show.forces"]:
-            lengths = [self.diagram.edge_length(*edge) for edge in edges]
-            for edge, value in zip(edges, remap_values(lengths)):
-                edge_color[edge] = Color.from_i(value)
+            lengths = remap_values([self.diagram.edge_length(*edge) for edge in edges])
+            edge_color.update({edge: Color.from_i(value) for edge, value in zip(edges, lengths)})
 
         guids = self.artist.draw_edges(edges, edge_color)
         self.guids += guids
         self.guid_edge = zip(guids, edges)
+
+        if self.settings["show.edges"]:
+            compas_rhino.rs.ShowGroup(self.groupname_edges)
+        else:
+            compas_rhino.rs.HideGroup(self.groupname_edges)
 
     def _draw_edgelabels(self):
         """
@@ -116,15 +125,10 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
         for edge, angle in zip(edges, angles):
             if angle > tol:
                 text = "{:.0f}".format(angle)
-                color = Color.from_i((angle - amin) / aspan)
+                color = Color.from_i((angle - amin) / aspan).rgb255
+                pos = centroid_points([vertex_xyz[edge[0]], vertex_xyz[edge[1]]])
+                name = "{}.edgelabel.{}-{}".format(self.diagram.name, *edge)
+                labels.append({"pos": pos, "name": name, "color": color, "text": text})
 
-                labels.append(
-                    {
-                        "pos": centroid_points([vertex_xyz[edge[0]], vertex_xyz[edge[1]]]),
-                        "name": "{}.edgelabel.{}-{}".format(self.diagram.name, *edge),
-                        "color": color.rgb255,
-                        "text": text,
-                    }
-                )
         guids = compas_rhino.draw_labels(labels, layer=self.settings["layer"], clear=False, redraw=False)
         self.guids += guids

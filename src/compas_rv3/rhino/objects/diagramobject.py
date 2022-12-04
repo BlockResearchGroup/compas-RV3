@@ -17,8 +17,16 @@ class RhinoDiagramObject(RhinoMeshObject, DiagramObject):
         The name of the group containing the vertices.
     groupname_edges : str
         The name of the group containing the edges.
+    groupname_faces : str
+        The name of the group containing the faces.
 
     """
+
+    def __init__(self, *args, **kwargs):
+        super(RhinoDiagramObject, self).__init__(*args, **kwargs)
+        self.add_group(self.groupname_vertices)
+        self.add_group(self.groupname_edges)
+        self.add_group(self.groupname_faces)
 
     @RhinoMeshObject.guid_vertex.setter
     def guid_vertex(self, items):

@@ -30,7 +30,7 @@ class ForceObject(DiagramObject):
     SETTINGS = Settings(
         {
             "layer": StrValue("RV2::ForceDiagram"),
-            "show.vertices": BoolValue(True),
+            "show.vertices": BoolValue(False),
             "show.edges": BoolValue(True),
             "color.vertices": ColorValue(Color.cyan()),
             "color.vertices:is_fixed": ColorValue(Color.cyan()),

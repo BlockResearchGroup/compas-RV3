@@ -16,6 +16,11 @@ class RhinoFormObject(RhinoDiagramObject, FormObject):
     Rhino scene object for form diagrams in RV3.
     """
 
+    def __init__(self, *args, **kwargs):
+        super(RhinoFormObject, self).__init__(*args, **kwargs)
+        self.add_group(self.groupname_vertices_free)
+        self.add_group(self.groupname_vertices_anchored)
+
     @property
     def groupname_vertices_free(self):
         return "{}::vertices::free".format(self.settings["layer"])
@@ -74,12 +79,11 @@ class RhinoFormObject(RhinoDiagramObject, FormObject):
 
         compas_rhino.rs.AddObjectsToGroup(guids_free, self.groupname_vertices_free)
         compas_rhino.rs.AddObjectsToGroup(guids_anchored, self.groupname_vertices_anchored)
+        compas_rhino.rs.HideGroup(self.groupname_vertices_free)
 
         if self.settings["show.vertices"]:
-            compas_rhino.rs.HideGroup(self.groupname_vertices_free)
             compas_rhino.rs.ShowGroup(self.groupname_vertices_anchored)
         else:
-            compas_rhino.rs.HideGroup(self.groupname_vertices_free)
             compas_rhino.rs.HideGroup(self.groupname_vertices_anchored)
 
     def _draw_edges(self):

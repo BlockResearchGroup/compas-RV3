@@ -12,6 +12,12 @@ class RhinoPatternObject(RhinoMeshObject, PatternObject):
     Rhino scene object for patterns in RV3.
     """
 
+    def __init__(self, *args, **kwargs):
+        super(RhinoPatternObject, self).__init__(*args, **kwargs)
+        self.add_group(self.groupname_vertices)
+        self.add_group(self.groupname_edges)
+        self.add_group(self.groupname_faces)
+
     @RhinoMeshObject.guid_vertex.setter
     def guid_vertex(self, items):
         RhinoMeshObject.guid_vertex.fset(self, items)
