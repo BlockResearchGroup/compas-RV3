@@ -55,11 +55,6 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
         self.guids += guids
         self.guid_vertex = zip(guids, vertices)
 
-        if self.settings["show.vertices"]:
-            compas_rhino.rs.ShowGroup(self.groupname_vertices)
-        else:
-            compas_rhino.rs.HideGroup(self.groupname_vertices)
-
     def _draw_edges(self):
         """
         Draw the edges of the diagram.
@@ -88,11 +83,6 @@ class RhinoForceObject(RhinoDiagramObject, ForceObject):
         guids = self.artist.draw_edges(edges, edge_color)
         self.guids += guids
         self.guid_edge = zip(guids, edges)
-
-        if self.settings["show.edges"]:
-            compas_rhino.rs.ShowGroup(self.groupname_edges)
-        else:
-            compas_rhino.rs.HideGroup(self.groupname_edges)
 
     def _draw_edgelabels(self):
         """

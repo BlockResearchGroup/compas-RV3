@@ -77,15 +77,6 @@ class RhinoFormObject(RhinoDiagramObject, FormObject):
         self.guids += guids
         self.guid_vertex = zip(guids, vertices)
 
-        compas_rhino.rs.AddObjectsToGroup(guids_free, self.groupname_vertices_free)
-        compas_rhino.rs.AddObjectsToGroup(guids_anchored, self.groupname_vertices_anchored)
-        compas_rhino.rs.HideGroup(self.groupname_vertices_free)
-
-        if self.settings["show.vertices"]:
-            compas_rhino.rs.ShowGroup(self.groupname_vertices_anchored)
-        else:
-            compas_rhino.rs.HideGroup(self.groupname_vertices_anchored)
-
     def _draw_edges(self):
         """
         Draw the edges of the diagram.

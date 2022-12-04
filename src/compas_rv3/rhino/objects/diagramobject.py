@@ -34,6 +34,7 @@ class RhinoDiagramObject(RhinoMeshObject, DiagramObject):
 
         guids = list(self.guid_vertex.keys())
         groupname = self.groupname_vertices
+
         compas_rhino.rs.AddObjectsToGroup(guids, groupname)
         if self.settings["show.vertices"]:
             compas_rhino.rs.ShowGroup(groupname)
@@ -46,6 +47,7 @@ class RhinoDiagramObject(RhinoMeshObject, DiagramObject):
 
         guids = list(self.guid_edge.keys())
         groupname = self.groupname_edges
+
         compas_rhino.rs.AddObjectsToGroup(guids, groupname)
         if self.settings["show.edges"]:
             compas_rhino.rs.ShowGroup(groupname)
@@ -58,6 +60,7 @@ class RhinoDiagramObject(RhinoMeshObject, DiagramObject):
 
         guids = list(self.guid_face.keys())
         groupname = self.groupname_faces
+
         compas_rhino.rs.AddObjectsToGroup(guids, groupname)
         if self.settings["show.faces"]:
             compas_rhino.rs.ShowGroup(groupname)
