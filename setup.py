@@ -28,7 +28,7 @@ optional_requirements = {}
 
 setup(
     name="compas_rv3",
-    version="0.2.4",
+    version="0.3.0",
     description="Funicular form finding based on compas_tna",
     long_description=long_description,
     long_description_content_type="text/markdown",
