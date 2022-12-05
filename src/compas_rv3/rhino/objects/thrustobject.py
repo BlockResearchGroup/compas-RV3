@@ -2,10 +2,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import random
 import compas_rhino
 from compas.colors import Color
-from compas.colors import ColorMap
 from compas.utilities import remap_values
 from compas_rv3.objects import ThrustObject
 from compas_rv3.rhino.conduits import SelfWeightConduit
