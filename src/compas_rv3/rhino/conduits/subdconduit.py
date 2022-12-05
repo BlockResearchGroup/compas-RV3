@@ -28,8 +28,8 @@ class SubdConduit(BaseConduit):
         self.color = color
 
     def DrawForeground(self, e):
+        color = FromArgb(*self.color)
         for line in self.lines:
             sp = line[0]
             ep = line[1]
-            # color = self.color
-            e.Display.DrawLine(Point3d(*sp), Point3d(*ep), FromArgb(*self.color), self.thickness)
+            e.Display.DrawLine(Point3d(*sp), Point3d(*ep), color, self.thickness)

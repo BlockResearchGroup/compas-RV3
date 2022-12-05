@@ -29,6 +29,22 @@ class RhinoFormObject(RhinoDiagramObject, FormObject):
     def groupname_vertices_anchored(self):
         return "{}::vertices::anchored".format(self.settings["layer"])
 
+    @RhinoDiagramObject.guid_vertex.setter
+    def guid_vertex(self, items):
+        RhinoDiagramObject.guid_vertex.fset(self, items)
+
+        guids_free = [guid for guid, vertex in items if not self.diagram.vertex_attribute(vertex, "is_anchor")]
+        guids_anchored = [guid for guid, vertex in items if self.diagram.vertex_attribute(vertex, "is_anchor")]
+
+        compas_rhino.rs.AddObjectsToGroup(guids_free, self.groupname_vertices_free)
+        compas_rhino.rs.AddObjectsToGroup(guids_anchored, self.groupname_vertices_anchored)
+        compas_rhino.rs.HideGroup(self.groupname_vertices_free)
+
+        if self.settings["show.vertices"]:
+            compas_rhino.rs.ShowGroup(self.groupname_vertices_anchored)
+        else:
+            compas_rhino.rs.HideGroup(self.groupname_vertices_anchored)
+
     def draw(self):
         """
         Draw the objects representing the form diagram.

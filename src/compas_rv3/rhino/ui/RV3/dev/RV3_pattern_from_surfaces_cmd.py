@@ -3,17 +3,17 @@ from __future__ import absolute_import
 from __future__ import division
 
 import math
-
 import compas_rhino
 
 from compas.topology import breadth_first_traverse
-
 from compas.datastructures import mesh_face_adjacency
 
 from compas_rv3.datastructures import SubdMesh
 from compas_rv3.datastructures import Pattern
+from compas_rv3.rhino.conduits import SubdConduit
 
-from compas_rv3.rhino import SubdConduit
+from compas_ui.objects import Group
+from compas_ui.ui import UI
 
 
 __commandname__ = "RV3_pattern_from_surfaces"
@@ -141,11 +141,10 @@ def mesh_unify_cycles(mesh, root=None):
                 mesh.halfedge[v][u] = None
 
 
+@UI.error()
 def RunCommand(is_interactive):
 
-    scene = get_scene()  # noqa F821
-    if not scene:
-        return
+    ui = UI()
 
     # 1. select rhino surface or polysurfaces
     guid = compas_rhino.select_surface(message="Select one surface or joined, non-trimmed surfaces")
@@ -153,22 +152,25 @@ def RunCommand(is_interactive):
 
     # 2. make subdmesh and add it to the scene
     subdmesh = SubdMesh.from_guid(guid)
-    scene.add(subdmesh, name="subd")
-    subd = scene.get("subd")[0]
+    subd = ui.scene.add(subdmesh, name="SubdMesh")
+    subd.settings["show.vertices"] = False
+    subd.settings["show.edges"] = True
+    subd.settings["show.faces"] = False
 
     # default subdivision
-    subd1 = subd.datastructure.subdivide_all_faces()
+    subdmesh1 = subd.mesh.subdivide_all_faces()
 
     # 3. setup conduit to temporarily display subdmeshes
     conduit = SubdConduit([])
     conduit.enable()
-    conduit.lines = mesh_edge_lines(subd1)
+    conduit.lines = mesh_edge_lines(subdmesh1)
     conduit.thickness = 0
-    scene.update()
+    ui.scene.update()
 
     # ==========================================================================
-    #   iterative subdivision
+    # iterative subdivision
     # ==========================================================================
+
     options = ["SubdivideEntireMesh", "SubdivideEdgeStrip", "FinishSubdivision"]
 
     while True:
@@ -176,7 +178,7 @@ def RunCommand(is_interactive):
 
         if option is None:
             conduit.disable()
-            scene.clear()
+            ui.scene.clear()
             compas_rhino.rs.ShowObjects(guid)
             print("Subdivision aborted!")
             return
@@ -185,39 +187,42 @@ def RunCommand(is_interactive):
             break
 
         if option == "SubdivideEntireMesh":
-            update_nu_nv(subd.datastructure)
-            subd1 = subd.datastructure.subdivide_all_faces()
+            update_nu_nv(subd.mesh)
+            subdmesh1 = subd.mesh.subdivide_all_faces()
 
         elif option == "SubdivideEdgeStrip":
-            edge = subd.select_edge()
-
-            if not edge:
+            edges = subd.select_edges()
+            if not edges:
                 print("No edge was selected.")
                 continue
+            edge = edges[0]
 
             compas_rhino.rs.UnselectAllObjects()
             compas_rhino.rs.Redraw()
-            divide_edge_strip_faces(subd.datastructure, edge)
-            subd1 = subd.datastructure.subdivide_all_faces()
+            divide_edge_strip_faces(subd.mesh, edge)
+            subdmesh1 = subd.mesh.subdivide_all_faces()
 
         elif option == "FinishSubdivision":
             break
 
-        conduit.lines = mesh_edge_lines(subd1)
-        scene.update()
+        conduit.lines = mesh_edge_lines(subdmesh1)
+        ui.scene.update()
 
     # ==========================================================================
 
     conduit.disable()
 
     # 8. make pattern from subdmesh
-    mesh_unify_cycles(subd1)
-    pattern = Pattern.from_data(subd1.data)
+    mesh_unify_cycles(subdmesh1)
+    pattern = Pattern.from_vertices_and_faces(*subdmesh1.to_vertices_and_faces())
 
     # 9. update scene
-    scene.clear()
-    scene.add(pattern, name="Pattern")
-    scene.update()
+    ui.scene.remove(subd)
+    group = ui.scene.add(Group(), name="RV3")
+    group.add(pattern, name="Pattern")
+    ui.scene.active_object = group
+    ui.scene.update()
+    ui.record()
 
     print("Pattern object successfully created. Input surface or polysurface has been hidden.")
 
@@ -227,5 +232,4 @@ def RunCommand(is_interactive):
 # ==============================================================================
 
 if __name__ == "__main__":
-
     RunCommand(True)

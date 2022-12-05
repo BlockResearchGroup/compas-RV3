@@ -7,8 +7,7 @@ import compas_rhino
 import RV3_pattern_from_lines_cmd
 import RV3_pattern_from_mesh_cmd
 import RV3_pattern_from_triangulation_cmd
-
-# import RV3_pattern_from_surfaces_cmd
+import RV3_pattern_from_surfaces_cmd
 
 
 __commandname__ = "RV3_toolbar_pattern"
@@ -28,8 +27,8 @@ def RunCommand(is_interactive):
     elif option == "FromMesh":
         RV3_pattern_from_mesh_cmd.RunCommand(True)
 
-    # elif option == "FromSurfaces":
-    #     RV3_pattern_from_surfaces_cmd.RunCommand(True)
+    elif option == "FromSurfaces":
+        RV3_pattern_from_surfaces_cmd.RunCommand(True)
 
     elif option == "FromTriangulation":
         RV3_pattern_from_triangulation_cmd.RunCommand(True)
