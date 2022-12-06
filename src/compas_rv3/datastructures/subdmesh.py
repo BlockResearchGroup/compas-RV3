@@ -199,7 +199,7 @@ class SubdMesh(Mesh):
 
     def divide_brep_curve(self, edge, n):
         """
-        Divide the brep curve corresponding to the edge
+        Divide the brep curve corresponding to an edge and store the resulting points in the edge attributes.
 
         Parameters
         ----------
