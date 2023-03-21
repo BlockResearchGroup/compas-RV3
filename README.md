@@ -13,7 +13,7 @@ The [User Manual](https://blockresearchgroup.gitbook.io/compas-rv3/documentation
 
 ## Questions and feedback
 
-RV2 has a dedicated [post category on the COMPAS forum](https://forum.compas-framework.org/c/RV3) for questions and discussions.
+compas-RV3 has a dedicated [post category on the COMPAS forum](https://forum.compas-framework.org/c/RV3) for questions and discussions.
 
 ## Issue tracker
 
