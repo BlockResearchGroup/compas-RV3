@@ -4,7 +4,7 @@ compas-RV3 (RhinoVAULT 3) is an implementation of RhinVAULT for Rhino 6+, based 
 
 ## Getting Started
 
-RV3 is available as installable plugin for Rhino(6+).
+compas-RV3 is available as installable plugin for Rhino(6+).
 Installation instructions are available in the docs: [Installation](https://blockresearchgroup.gitbook.io/compas-rv3/documentation/dev-installs)
 
 ## First Steps
