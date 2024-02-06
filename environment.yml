@@ -5,8 +5,8 @@ channels:
 dependencies:
    - python=3.9
    - pip
-   - compas>=1.17.4
-   - compas_cgal
+   - compas>=1.17.4, <2
+   - compas_cgal=0.5.0
    - pip:
      - compas_cloud
      - compas_ui>=0.9.1
