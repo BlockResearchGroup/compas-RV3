@@ -1,4 +1,4 @@
-compas >=1.17.4
+compas >=1.17.4,<2
 compas_cloud
 compas_tna >=0.2.0
 compas_ui >=0.9.1
