@@ -6,7 +6,7 @@ dependencies:
    - python=3.9
    - pip
    - compas=1.17.4
-   - scipy=1.11.4
+   - scipy=1.10.1
    - compas_cgal=0.5.0
    - pip:
      - compas_cloud==0.4.1
