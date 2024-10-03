@@ -1,8 +1,8 @@
 # compas-RV3 (RhinoVAULT 3)
 
 > [!WARNING]
-> This package is deprecated due COMPAS2 release and will be removed in the future.
-> Please use [compas-RV](https://github.com/BlockResearchGroup/compas-RV) instead
+> This package is deprecated and will be removed in the future.
+> Please use [compas-RV](https://github.com/BlockResearchGroup/compas-RV) instead.
 
 ![](compas-RV3.jpg)
 compas-RV3 (RhinoVAULT 3) is an implementation of RhinVAULT for Rhino 6+, based on the COMPAS framework.
